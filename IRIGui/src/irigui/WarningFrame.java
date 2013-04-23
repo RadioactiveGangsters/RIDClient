@@ -4,27 +4,31 @@
  */
 package irigui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.*;
 
 /**
  *
  * @author user
  */
-public class WarningFrame implements Runnable{
+public class WarningFrame implements Runnable, ActionListener{
    JFrame WarningFrame;
    JPanel WarningPanel;
+   JButton OkButton;
     public WarningFrame(String text, float value){
         WarningFrame = new JFrame();
-        WarningPanel = new JPanel();
+        WarningPanel = new JPanel(new BorderLayout());
         JLabel WarningText = new JLabel();
-        JButton OkButton = new JButton("Take Action!");
+        OkButton = new JButton("Take Action!");
         
         
         WarningText.setText(text);
         
-        WarningPanel.add(WarningText);
-        WarningPanel.add(OkButton);
+        WarningPanel.add(WarningText, BorderLayout.CENTER);
+        WarningPanel.add(OkButton, BorderLayout.PAGE_END);
         WarningFrame.add(WarningPanel);
         WarningFrame.setSize(500,300);
         WarningFrame.setLocationRelativeTo(null);
@@ -51,5 +55,14 @@ public class WarningFrame implements Runnable{
             }
         }
     }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource().equals(OkButton)){
+            WarningFrame.dispose();
+        }
+    }
+    
+    
     
 }
