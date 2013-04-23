@@ -77,7 +77,7 @@ public class WarningFrame implements Runnable, ActionListener {
 
     public void PlaySound() {
         try {
-         URL url = this.getClass().getClassLoader().getResource("resources\\ALARM.wav");
+         URL url = this.getClass().getClassLoader().getResource("resources\\ALARM.WAV");
          AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
          clip = AudioSystem.getClip();
          clip.open(audioIn);
