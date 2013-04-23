@@ -4,7 +4,6 @@
  */
 package irigui;
 
-import java.applet.AudioClip;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -38,14 +37,14 @@ public class WarningFrame implements Runnable, ActionListener {
 
 
         WarningText.setText(text);
-
-        WarningPanel.add(WarningText, BorderLayout.CENTER);
+        WarningPanel.add(WarningText, BorderLayout.NORTH);
         WarningPanel.add(OkButton, BorderLayout.PAGE_END);
         WarningFrame.add(WarningPanel);
         WarningFrame.setSize(500, 300);
         WarningFrame.setLocationRelativeTo(null);
         Thread flasher = new Thread(this);
         flasher.start();
+        WarningFrame.setAlwaysOnTop(true);
         WarningFrame.setVisible(true);
     }
 
@@ -81,7 +80,6 @@ public class WarningFrame implements Runnable, ActionListener {
          URL url = this.getClass().getClassLoader().getResource("resources\\ALARM.wav");
          AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
          clip = AudioSystem.getClip();
-         
          clip.open(audioIn);
          clip.start();
       } catch (UnsupportedAudioFileException e) {
