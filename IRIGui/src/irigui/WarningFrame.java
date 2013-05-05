@@ -28,11 +28,11 @@ public class WarningFrame implements Runnable, ActionListener {
     JButton OkButton;
     Clip clip;
 
-    public WarningFrame(String text, float value) {
+    public WarningFrame(String text, float value, String countermeasurement) {
         WarningFrame = new JFrame();
         WarningPanel = new JPanel(new BorderLayout());
         JLabel WarningText = new JLabel();
-        OkButton = new JButton("Take Action!");
+        OkButton = new JButton(countermeasurement);
         OkButton.addActionListener(this);
 
 

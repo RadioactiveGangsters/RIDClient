@@ -15,6 +15,5 @@ public class IRIGui {
      */
     public static void main(String[] args) {
         MainScreen mainscreen = new MainScreen();
-        mainscreen.ShowWarning("TEST", 5);
     }
 }
