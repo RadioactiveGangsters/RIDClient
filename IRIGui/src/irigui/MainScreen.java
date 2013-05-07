@@ -4,9 +4,14 @@
  */
 package irigui;
 
+import Operations.PhotoResize;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 /**
@@ -30,6 +35,32 @@ public class MainScreen {
         } catch (IllegalAccessException e) {
             System.err.println("Illegal acces to Look and Feel");
         }
+        
+        ImageIcon tempicon = null;
+        ImageIcon niveauicon = null;
+        ImageIcon humidicon = null;
+        ImageIcon velocityicon = null;
+        ImageIcon fullemptyicon = null;
+        BufferedImage imagetoresize;
+        PhotoResize photoresizer = new PhotoResize();
+        
+        try{
+            imagetoresize = ImageIO.read(new File("resources//hotcold.jpg"));
+            tempicon = new ImageIcon(photoresizer.resizeImage(imagetoresize, 10, 10));
+            imagetoresize = ImageIO.read(new File("resources//level.png"));
+            niveauicon = new ImageIcon(photoresizer.resizeImage(imagetoresize, 10, 10));
+            imagetoresize = ImageIO.read(new File("resources//humidity.jpg"));
+            humidicon = new ImageIcon(photoresizer.resizeImage(imagetoresize, 10, 10));
+            imagetoresize = ImageIO.read(new File("resources//velocity.png"));
+            velocityicon = new ImageIcon(photoresizer.resizeImage(imagetoresize, 10, 10));
+            imagetoresize = ImageIO.read(new File("resources//full.empty.png"));
+            fullemptyicon = new ImageIcon(photoresizer.resizeImage(imagetoresize, 10, 10));
+            
+        }catch(IOException e){
+            System.out.println("Fout in het laden!");
+            e.printStackTrace();
+        }
+        
         JFrame MainFrame = new JFrame("Reactor Controller");
         Toolkit tk = Toolkit.getDefaultToolkit();
         int xSize = ((int) tk.getScreenSize().getWidth());
@@ -56,8 +87,8 @@ public class MainScreen {
         valuepanel.add(temptitlelabel);
         temperaturepanel.add(splitgraphvalues);
 
-        JPanel ultrasonicpanel = new JPanel(new GridLayout(1, 2));
-        JLabel ultratitlelabel = new JLabel("Ultrasoon");
+        JPanel velocitypanel = new JPanel(new GridLayout(1, 2));
+        JLabel veloctitlelabel = new JLabel("Snelheid");
         graphpanel = new JPanel();
         valuepanel = new JPanel();
         splitgraphvalues = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -65,9 +96,9 @@ public class MainScreen {
         splitgraphvalues.setTopComponent(valuepanel);
         splitgraphvalues.setDividerLocation(MainFrame.getHeight() / 2);
         splitgraphvalues.setEnabled(false);
-        ultratitlelabel.setFont(titlefont);
-        valuepanel.add(ultratitlelabel);
-        ultrasonicpanel.add(splitgraphvalues);
+        veloctitlelabel.setFont(titlefont);
+        valuepanel.add(veloctitlelabel);
+        velocitypanel.add(splitgraphvalues);
 
         JPanel humiditypanel = new JPanel(new GridLayout(1, 2));
         JLabel humtitlelabel = new JLabel("Vochtigheid");
@@ -82,8 +113,8 @@ public class MainScreen {
         valuepanel.add(humtitlelabel);
         humiditypanel.add(splitgraphvalues);
 
-        JPanel infraredpanel = new JPanel(new GridLayout(1, 2));
-        JLabel infratitlelabel = new JLabel("Infrarood");
+        JPanel fullemptypanel = new JPanel(new GridLayout(1, 2));
+        JLabel infratitlelabel = new JLabel("Vol/Leeg");
         graphpanel = new JPanel();
         valuepanel = new JPanel();
         splitgraphvalues = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -93,7 +124,7 @@ public class MainScreen {
         infratitlelabel.setFont(titlefont);
         splitgraphvalues.setEnabled(false);
         valuepanel.add(infratitlelabel);
-        infraredpanel.add(splitgraphvalues);
+        fullemptypanel.add(splitgraphvalues);
 
         JPanel levelpanel = new JPanel(new GridLayout(1, 2));
         JLabel leveltitlelabel = new JLabel("Niveau");
@@ -110,11 +141,11 @@ public class MainScreen {
 
 
 
-        tabbedPane.add("Temperatuur", temperaturepanel);
-        tabbedPane.add("Ultrasoon", ultrasonicpanel);//TODO wat moet er ultrasoon gemeten worden?
-        tabbedPane.add("Vochtigheid", humiditypanel);
-        tabbedPane.add("Infrarood", infraredpanel);//TODO wat moet er infrarood gemeten worden
-        tabbedPane.add("Niveau", levelpanel);
+        tabbedPane.addTab("Temperatuur", tempicon, temperaturepanel);
+        tabbedPane.addTab("Snelheid",velocityicon, velocitypanel);//TODO wat moet er ultrasoon gemeten worden?
+        tabbedPane.addTab("Vochtigheid",humidicon, humiditypanel);
+        tabbedPane.addTab("Vol/leeg",fullemptyicon,fullemptypanel);//TODO wat moet er infrarood gemeten worden
+        tabbedPane.addTab("Niveau",niveauicon,levelpanel);
 
         MainFrame.add(tabbedPane);
         MainFrame.setVisible(true);
