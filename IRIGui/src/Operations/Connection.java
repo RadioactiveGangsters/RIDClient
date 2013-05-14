@@ -7,8 +7,7 @@ package Operations;
 import java.io.IOException;
 import java.net.*;
 import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *
@@ -18,24 +17,31 @@ public class Connection {
     
     Socket connection;
     DataOutputStream output;
-    DataInputStream input;
+    BufferedReader input;
     
+    
+    /** Initialize the connection and streams*/
     public void Connect(final String ip, final int port){
-        try {
+        try 
+        {
+            
             connection = new Socket(ip, port);
             output = new DataOutputStream(connection.getOutputStream());
-            input = new DataInputStream(connection.getInputStream());
+            input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             
             
-        } catch (UnknownHostException ex) {
+        } 
+        catch (UnknownHostException ex) 
+        {
             System.out.println(ex.getMessage());
-        } catch (IOException ex) {
+        } 
+        catch (IOException ex) 
+        {
             System.out.println(ex.getMessage());
         } 
  	finally
 
  	{
-
             if(connection!=null)
 
                     try
@@ -52,6 +58,20 @@ public class Connection {
     
     }
     
+    public int getData()
+    {
+        int data = 0;
+
+        try 
+        {      
+            data = input.read();
+        } 
+        catch (IOException ex) 
+        {   
+            System.out.println(ex.getMessage());
+        }
+        return data;
+    } 
     
     
 }
