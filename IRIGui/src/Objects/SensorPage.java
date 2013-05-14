@@ -6,12 +6,14 @@ package Objects;
 
 import irigui.MainScreen;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.HashMap;
 import javax.swing.*;
+import javax.swing.border.Border;
 import org.jfree.chart.*;
 
 /**
@@ -30,6 +32,7 @@ public class SensorPage implements MouseListener{
     private JScrollPane scroller;
     private final JSplitPane splitmids;
     HashMap<Integer, JLabel> sensors;
+    JLabel selectedlabel;
     
     public SensorPage(String titletext, int amntofsensors, MainScreen mainscreen){
         this.amntofsensors = amntofsensors;
@@ -78,8 +81,13 @@ public class SensorPage implements MouseListener{
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        JLabel selectedLabel = (JLabel)e.getSource();
-        System.out.println("This Label is selected: " + selectedLabel.getText());
+        if(selectedlabel != null){
+            selectedlabel.setBorder(null);
+        }
+        selectedlabel = (JLabel)e.getSource();
+        Border lineBorder = BorderFactory.createLineBorder(Color.BLACK);
+        selectedlabel.setBorder(lineBorder);
+        System.out.println("This Label is selected: " + selectedlabel.getText());
     }
 
     @Override
