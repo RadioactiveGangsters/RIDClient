@@ -5,13 +5,13 @@
 package irigui;
 
 import Objects.SensorPage;
+import Operations.Connection;
 import Operations.PhotoResize;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -23,6 +23,7 @@ public class MainScreen {
 
     Font titlefont = new Font("SansSerif", Font.BOLD, 48);
     JFrame MainFrame;
+    Connection connection;
 
     public MainScreen() {
         try {
@@ -62,7 +63,7 @@ public class MainScreen {
             System.out.println("Fout in het laden!");
             e.printStackTrace();
         }
-
+        ConnectToServer();
         MainFrame = new JFrame("Reactor Controller");
         Toolkit tk = Toolkit.getDefaultToolkit();
         int xSize = ((int) tk.getScreenSize().getWidth());
@@ -72,12 +73,12 @@ public class MainScreen {
         MainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JTabbedPane tabbedPane = new JTabbedPane();
-        
-        SensorPage tempsensorpage = new SensorPage("Temperatuur",90, this);
+
+        SensorPage tempsensorpage = new SensorPage("Temperatuur", 90, this);
         SensorPage velocitypage = new SensorPage("Snelheid", 110, this);
-        SensorPage humiditypage = new SensorPage("Vochtigheid", 110,this);
-        SensorPage fullemptypage = new SensorPage("Vol/Leeg",80,this);
-        SensorPage levelpage = new SensorPage("Niveau",120,this);
+        SensorPage humiditypage = new SensorPage("Vochtigheid", 110, this);
+        SensorPage fullemptypage = new SensorPage("Vol/Leeg", 80, this);
+        SensorPage levelpage = new SensorPage("Niveau", 120, this);
 
         tabbedPane.addTab("Temperatuur", tempicon, tempsensorpage.getPanel());
         tabbedPane.addTab("Snelheid", velocityicon, velocitypage.getPanel());//TODO wat moet er ultrasoon gemeten worden?
@@ -88,12 +89,18 @@ public class MainScreen {
         MainFrame.add(tabbedPane);
         MainFrame.setVisible(true);
     }
-
-    public void ShowWarning(String text, float value, int sensorid, String countermeasurement) {
-        WarningFrame warningframe = new WarningFrame(text, value, sensorid, countermeasurement);
+    
+    public void ConnectToServer() {
+        connection = Connection.getInstance();
+        //connection.Connect(127.0.0.1, 1);
+        //Let's keep the last line commented until we are sure the connection works
     }
     
-    public int getFrameHeight(){
+    public boolean isConnected(){
+        return connection.isConnected();
+    }
+
+    public int getFrameHeight() {
         return MainFrame.getHeight();
     }
 }

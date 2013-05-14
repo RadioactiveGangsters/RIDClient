@@ -17,6 +17,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 /**
  *
@@ -37,7 +38,8 @@ public class WarningFrame implements Runnable, ActionListener {
         OkButton = new JButton(countermeasurement);
         OkButton.addActionListener(this);
 
-        text = text + sensorid + " leest een waarde van: " + value;
+        text =  text + " " + sensorid + " leest een waarde van: " + value;
+        WarningText.setBorder(new EmptyBorder(0,125,0,0));
         WarningText.setFont(titlefont);
         WarningText.setText(text);
         WarningPanel.add(WarningText, BorderLayout.CENTER);

@@ -4,34 +4,25 @@
  */
 package Objects;
 
+
 import irigui.MainScreen;
-import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
-import java.awt.Polygon;
-import java.awt.Shape;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.geom.Rectangle2D;
 import java.util.HashMap;
-import java.util.Random;
 import javax.swing.*;
 import javax.swing.border.Border;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.DefaultDrawingSupplier;
-import org.jfree.chart.plot.DrawingSupplier;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.data.category.CategoryDataset;
-import org.jfree.data.category.DefaultCategoryDataset;
+
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -40,7 +31,7 @@ import org.jfree.data.xy.XYSeriesCollection;
  *
  * @author user
  */
-public class SensorPage implements MouseListener {
+public class SensorPage implements MouseListener{
 
     private final Font titlefont = new Font("SansSerif", Font.BOLD, 48);
     private final int amntofsensors;
@@ -56,22 +47,26 @@ public class SensorPage implements MouseListener {
     HashMap<Integer, JLabel> sensors;
     JLabel selectedlabel;
     String selectedlabelsubstr;
+    MainScreen mainscreen;
 
     public SensorPage(String titletext, int amntofsensors, MainScreen mainscreen) {
         this.amntofsensors = amntofsensors;
         this.titletext = titletext;
+        this.mainscreen = mainscreen;
         sensors = new HashMap<>();
+        //The line below must stay commented until we can safely connect to the server
+        //DataReader.start();  
         mainpanel = new JPanel(new BorderLayout());
         title = new JLabel(titletext);
         scroller = new JScrollPane();
         graphpanel = new JPanel();
+        graphpanel.add(new JLabel("Klik op een sensor om een grafiek van die sensor te bekijken"));
         valuepanel = new JPanel(new GridLayout(30, 3));
         scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroller.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scroller.getHorizontalScrollBar().setUnitIncrement(16);
         scroller.getVerticalScrollBar().setUnitIncrement(16);
         scroller.setViewportView(graphpanel);
-
         splitmids = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         splitmids.setBottomComponent(scroller);
         splitmids.setTopComponent(valuepanel);
@@ -181,4 +176,5 @@ public class SensorPage implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
     }
+    
 }

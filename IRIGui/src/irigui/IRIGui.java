@@ -13,9 +13,11 @@ public class IRIGui {
     /**
      * @param args the command line arguments
      */
-    
+    static String ConnectionType = "Connection";
+    static String Nodata = "NoData";
     public static void main(String[] args) {
         MainScreen mainscreen = new MainScreen();
        
+
     }
 }
