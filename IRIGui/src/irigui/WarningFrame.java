@@ -6,6 +6,7 @@ package irigui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -23,27 +24,31 @@ import javax.swing.*;
  */
 public class WarningFrame implements Runnable, ActionListener {
 
-    JFrame WarningFrame;
+    JDialog WarningFrame;
     JPanel WarningPanel;
     JButton OkButton;
     Clip clip;
+    Font titlefont = new Font("SansSerif", Font.BOLD, 15);
 
-    public WarningFrame(String text, float value, String countermeasurement) {
-        WarningFrame = new JFrame();
+    public WarningFrame(String text, float value, int sensorid, String countermeasurement) {
+        WarningFrame = new JDialog();
         WarningPanel = new JPanel(new BorderLayout());
         JLabel WarningText = new JLabel();
         OkButton = new JButton(countermeasurement);
         OkButton.addActionListener(this);
 
-
+        text = text + sensorid + " leest een waarde van: " + value;
+        WarningText.setFont(titlefont);
         WarningText.setText(text);
-        WarningPanel.add(WarningText, BorderLayout.NORTH);
+        WarningPanel.add(WarningText, BorderLayout.CENTER);
         WarningPanel.add(OkButton, BorderLayout.PAGE_END);
         WarningFrame.add(WarningPanel);
         WarningFrame.setSize(500, 300);
         WarningFrame.setLocationRelativeTo(null);
         Thread flasher = new Thread(this);
         flasher.start();
+        WarningFrame.setResizable(false);
+        WarningFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         WarningFrame.setAlwaysOnTop(true);
         WarningFrame.setVisible(true);
     }
@@ -58,7 +63,7 @@ public class WarningFrame implements Runnable, ActionListener {
             } catch (Exception e) {
                 System.out.println("SLEEP FAIL!");
             }
-            WarningPanel.setBackground(Color.YELLOW);
+            WarningPanel.setBackground(Color.WHITE);
             try {
                 Thread.sleep(500);
             } catch (Exception e) {
@@ -77,11 +82,11 @@ public class WarningFrame implements Runnable, ActionListener {
 
     public void PlaySound() {
         try {
-         URL url = this.getClass().getClassLoader().getResource("resources\\ALARM.WAV");
+         URL url = this.getClass().getClassLoader().getResource("resources/ALARM.WAV");
          AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
          clip = AudioSystem.getClip();
          clip.open(audioIn);
-         clip.start();
+         clip.loop(Integer.MAX_VALUE);
       } catch (UnsupportedAudioFileException e) {
          e.printStackTrace();
       } catch (IOException e) {
