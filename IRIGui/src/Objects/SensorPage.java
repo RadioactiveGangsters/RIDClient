@@ -54,8 +54,8 @@ public class SensorPage implements MouseListener{
         this.titletext = titletext;
         this.mainscreen = mainscreen;
         sensors = new HashMap<>();
-        //The line below must stay commented until we can safely connect to the server
-        //DataReader.start();  
+        //The line below must stay commented until we can safely connect to the server, we need to be sure to set the data in the initial setup!
+        //getData
         mainpanel = new JPanel(new BorderLayout());
         title = new JLabel(titletext);
         scroller = new JScrollPane();
@@ -175,6 +175,10 @@ public class SensorPage implements MouseListener{
 
     @Override
     public void mouseExited(MouseEvent e) {
+    }
+    
+    public HashMap getSensors(){
+        return sensors;
     }
     
 }

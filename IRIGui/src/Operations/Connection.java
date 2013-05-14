@@ -12,22 +12,21 @@ import java.io.*;
  *
  * @author Mitchell
  */
-public class Connection {
+public class Connection{
 
     Socket connection;
     DataOutputStream output;
     BufferedReader input;
     private static Connection instance = null;
-    
 
     /**
-     * Initialize the connection and streams
-     * This class is now Singleton, since we needed to be able to connect from different other classes.
-     * Also there should only exist one instance of this class at any time
+     * Initialize the connection and streams This class is now Singleton, since
+     * we needed to be able to connect from different other classes. Also there
+     * should only exist one instance of this class at any time
      */
-    private Connection(){
-        
+    private Connection() {
     }
+
     public static Connection getInstance() {
         if (instance == null) {
             instance = new Connection();
@@ -61,13 +60,14 @@ public class Connection {
     }
 
     public int getData() {
+        
         int data = 0;
-
-        try {
-            data = input.read();
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
+        System.out.println("Getting data");
+//        try {
+//            data = input.read();
+//        } catch (IOException ex) {
+//            System.out.println(ex.getMessage());
+//        }
         return data;
     }
 

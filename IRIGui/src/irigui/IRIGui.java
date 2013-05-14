@@ -4,6 +4,8 @@
  */
 package irigui;
 
+import Operations.DataHandler;
+
 /**
  *
  * @author user
@@ -17,7 +19,7 @@ public class IRIGui {
     static String Nodata = "NoData";
     public static void main(String[] args) {
         MainScreen mainscreen = new MainScreen();
-       
+        DataHandler.getInstance();
 
     }
 }
