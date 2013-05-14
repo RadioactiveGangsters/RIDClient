@@ -6,9 +6,7 @@ package irigui;
 
 import Objects.SensorPage;
 import Operations.PhotoResize;
-import java.awt.BorderLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -24,11 +22,6 @@ import javax.swing.*;
 public class MainScreen {
 
     Font titlefont = new Font("SansSerif", Font.BOLD, 48);
-    HashMap<Integer, JLabel> tempsensors = new HashMap<>();
-    HashMap<Integer, JLabel> niveausensors = new HashMap<>();
-    HashMap<Integer, JLabel> humiditysensors = new HashMap<>();
-    HashMap<Integer, JLabel> velocitysensors = new HashMap<>();
-    HashMap<Integer, JLabel> fullemptysensors = new HashMap<>();
     JFrame MainFrame;
 
     public MainScreen() {
@@ -74,6 +67,7 @@ public class MainScreen {
         Toolkit tk = Toolkit.getDefaultToolkit();
         int xSize = ((int) tk.getScreenSize().getWidth());
         int ySize = ((int) tk.getScreenSize().getHeight());
+        MainFrame.setResizable(false);
         MainFrame.setSize(xSize, ySize);
         MainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
