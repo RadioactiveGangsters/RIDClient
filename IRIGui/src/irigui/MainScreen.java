@@ -24,8 +24,15 @@ public class MainScreen {
     Font titlefont = new Font("SansSerif", Font.BOLD, 48);
     JFrame MainFrame;
     Connection connection;
+    SensorPage tempsensorpage;
+    SensorPage velocitypage;
+    SensorPage humiditypage;
+    SensorPage fullemptypage;
+    SensorPage levelpage;
+    private static MainScreen instance = null;
+    
 
-    public MainScreen() {
+    private MainScreen() {
         try {
             // Set set system look and feel
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -74,20 +81,41 @@ public class MainScreen {
 
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        SensorPage tempsensorpage = new SensorPage("Temperatuur", 90, this);
-        SensorPage velocitypage = new SensorPage("Snelheid", 110, this);
-        SensorPage humiditypage = new SensorPage("Vochtigheid", 110, this);
-        SensorPage fullemptypage = new SensorPage("Vol/Leeg", 80, this);
-        SensorPage levelpage = new SensorPage("Niveau", 120, this);
+        tempsensorpage = new SensorPage("Temperatuur", 90, this);
+        velocitypage = new SensorPage("Snelheid", 110, this);
+        humiditypage = new SensorPage("Vochtigheid", 110, this);
+        fullemptypage = new SensorPage("Vol/Leeg", 80, this);
+        levelpage = new SensorPage("Niveau", 120, this);
 
         tabbedPane.addTab("Temperatuur", tempicon, tempsensorpage.getPanel());
-        tabbedPane.addTab("Snelheid", velocityicon, velocitypage.getPanel());//TODO wat moet er ultrasoon gemeten worden?
+        tabbedPane.addTab("Snelheid", velocityicon, velocitypage.getPanel());
         tabbedPane.addTab("Vochtigheid", humidicon, humiditypage.getPanel());
-        tabbedPane.addTab("Vol/leeg", fullemptyicon, fullemptypage.getPanel());//TODO wat moet er infrarood gemeten worden
+        tabbedPane.addTab("Vol/leeg", fullemptyicon, fullemptypage.getPanel());
         tabbedPane.addTab("Niveau", niveauicon, levelpage.getPanel());
 
         MainFrame.add(tabbedPane);
         MainFrame.setVisible(true);
+    }
+   
+    public static MainScreen getInstance(){
+        if(instance == null){
+            instance = new MainScreen();
+        }
+        return instance;
+    }
+    
+    public void updateAllSensors(int typeofsensor, int key, int value){
+        if(typeofsensor == 0){
+            tempsensorpage.updateSensorValues(key, value);
+        }else if(typeofsensor == 1){
+            velocitypage.updateSensorValues(key, value);
+        }else if(typeofsensor == 2){
+            humiditypage.updateSensorValues(key, value);
+        }else if(typeofsensor == 3){
+            fullemptypage.updateSensorValues(key, value);
+        }else if(typeofsensor == 4){
+            levelpage.updateSensorValues(key, value);
+        }
     }
     
     public void ConnectToServer() {
@@ -102,5 +130,18 @@ public class MainScreen {
 
     public int getFrameHeight() {
         return MainFrame.getHeight();
+    }
+    public void addValuesToGraph(int typeofsensor, int key, int[] values){
+        if(typeofsensor == 0){
+            tempsensorpage.addValuesToGraph(key, values);
+        }else if(typeofsensor == 1){
+            velocitypage.addValuesToGraph(key, values);
+        }else if(typeofsensor == 2){
+            humiditypage.addValuesToGraph(key, values);
+        }else if(typeofsensor == 3){
+            fullemptypage.addValuesToGraph(key, values);
+        }else if(typeofsensor == 4){
+            levelpage.addValuesToGraph(key, values);
+        }
     }
 }

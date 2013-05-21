@@ -22,6 +22,7 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.general.Series;
 
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
@@ -48,6 +49,7 @@ public class SensorPage implements MouseListener{
     JLabel selectedlabel;
     String selectedlabelsubstr;
     MainScreen mainscreen;
+    XYSeries series1;
 
     public SensorPage(String titletext, int amntofsensors, MainScreen mainscreen) {
         this.amntofsensors = amntofsensors;
@@ -55,7 +57,6 @@ public class SensorPage implements MouseListener{
         this.mainscreen = mainscreen;
         sensors = new HashMap<>();
         //The line below must stay commented until we can safely connect to the server, we need to be sure to set the data in the initial setup!
-        //getData
         mainpanel = new JPanel(new BorderLayout());
         title = new JLabel(titletext);
         scroller = new JScrollPane();
@@ -92,9 +93,19 @@ public class SensorPage implements MouseListener{
     public JPanel getPanel() {
         return mainpanel;
     }
+    
+    public void updateSensorValues(int key, int value){
+        JLabel tempLabel = (JLabel)sensors.get(key);
+        sensors.remove(key);
+        String tempText = tempLabel.getText();
+        tempText = tempText.substring(0, tempText.lastIndexOf(": "));
+        String valuestring = Integer.toString(value);
+        tempText = tempText + valuestring;
+        tempLabel.setText(tempText);
+        sensors.put(key, tempLabel);
+    }
 
-    private void makeGraph() {
-        final XYDataset dataset = getData();
+    private void makeGraph(final XYDataset dataset) {
         final JFreeChart chart = ChartFactory.createXYLineChart(
                 selectedlabelsubstr, // chart title
                 "Tijd", // x axis label
@@ -128,22 +139,6 @@ public class SensorPage implements MouseListener{
 
     }
 
-    //This method should be getting the data from the server and put them in a data set
-    private XYDataset getData() {
-        final XYSeries series1 = new XYSeries("First");
-        series1.add(1.0, 1.0);
-        series1.add(2.0, 4.0);
-        series1.add(3.0, 3.0);
-        series1.add(4.0, 5.0);
-        series1.add(5.0, 5.0);
-        series1.add(6.0, 7.0);
-        series1.add(7.0, 7.0);
-        series1.add(8.0, 8.0);
-        final XYSeriesCollection dataset = new XYSeriesCollection();
-        dataset.addSeries(series1);
-        return dataset;
-    }
-
     @Override
     public void mouseClicked(MouseEvent e) {
 
@@ -154,11 +149,12 @@ public class SensorPage implements MouseListener{
         selectedlabel = (JLabel) e.getSource();
         Border lineBorder = BorderFactory.createLineBorder(Color.BLACK);
         selectedlabel.setBorder(lineBorder);
-
+        
         //The Real WORK!!
         String full = selectedlabel.getText();
         selectedlabelsubstr = full.substring(0, full.lastIndexOf(":"));
-        makeGraph();
+        series1 = new XYSeries(selectedlabelsubstr);
+        //Some command to req data from the server
     }
 
     @Override
@@ -179,6 +175,16 @@ public class SensorPage implements MouseListener{
     
     public HashMap getSensors(){
         return sensors;
+    }
+    
+    public void addValuesToGraph(int key, int []values){
+        int index = 0;
+        while(index != values.length){
+            series1.add(index, values[index]);
+        }
+        XYSeriesCollection dataset = new XYSeriesCollection();
+        dataset.addSeries(series1);
+        makeGraph(dataset);
     }
     
 }

@@ -15,11 +15,10 @@ public class IRIGui {
     /**
      * @param args the command line arguments
      */
-    static String ConnectionType = "Connection";
-    static String Nodata = "NoData";
+    public static String ConnectionType = "Connection";
+    public static String NodataType = "NoData";
     public static void main(String[] args) {
-        MainScreen mainscreen = new MainScreen();
+        MainScreen.getInstance();
         DataHandler.getInstance();
-
     }
 }
