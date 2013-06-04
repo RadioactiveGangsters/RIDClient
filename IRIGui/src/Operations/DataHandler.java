@@ -41,13 +41,11 @@ public class DataHandler{
             int amountofsensors = dataarray[index];
             index++;
             
-            while(index<=(amountofsensors + 3)){
-                System.out.println("This is something? " + index + "And this: " + (amountofsensors + 3));
+            while(index<=(dataarray.length-1)){
                 int temp = dataarray[index];
                 MainScreen.getInstance().updateAllSensors(sensortype, index-3, temp);
                 index++;
             }
-            System.out.println("Update all sensors");
             MainScreen.getInstance().refreshSensors(sensortype);
         }else if(dataarray[index] == 4){
             index++;

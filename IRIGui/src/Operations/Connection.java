@@ -93,7 +93,6 @@ public class Connection implements Runnable {
                     System.out.println("Not defined yet, see Berend for details, Opcode = 2");
                     break;
                 case 3:
-                    System.out.println("Updating sensors, hold on!");
                     int amntofsensors = 0;
                     try {
                         do {
@@ -102,7 +101,6 @@ public class Connection implements Runnable {
                     } catch (IOException ex) {
                         ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we het aantal sensoren van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
                     }
-                    System.out.println("THIS BIG: " + amntofsensors);
                     int arrayspace = amntofsensors + 3;
                     inputarray = new int[arrayspace];
                     int index = 0;
@@ -111,9 +109,9 @@ public class Connection implements Runnable {
                     inputarray[index] = sensortypenr;
                     index++;
                     inputarray[index] = amntofsensors;
-
+                    
                     int temp;
-                    while (index <= amntofsensors) {
+                    while (index <= (amntofsensors + 2)) {
                         try {
                             do {
                                 temp = input.read();

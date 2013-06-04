@@ -100,9 +100,9 @@ public class SensorPage implements MouseListener{
         String tempText = tempLabel.getText();
         System.out.println("This is a test: " + tempLabel.getText());
         System.out.println("This toooooo: " +  tempText.lastIndexOf(": "));
-        tempText = tempText.substring(0, tempText.lastIndexOf(": "));
+        tempText = tempText.substring(0, (tempText.lastIndexOf(": ")+1));
         String valuestring = Integer.toString(value);
-        tempText = tempText + valuestring;
+        tempText = tempText + " " + valuestring;
         tempLabel.setText(tempText);
         sensors.put(key, tempLabel);
     }
