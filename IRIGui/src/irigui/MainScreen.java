@@ -104,6 +104,19 @@ public class MainScreen {
         return instance;
     }
     
+    public void refreshSensors(int typeofsensor){
+        if(typeofsensor == 0){
+            tempsensorpage.refreshSensorLabels();
+        }else if(typeofsensor == 1){
+            velocitypage.refreshSensorLabels();
+        }else if(typeofsensor == 2){
+            humiditypage.refreshSensorLabels();
+        }else if(typeofsensor == 3){
+            fullemptypage.refreshSensorLabels();
+        }else if(typeofsensor == 4){
+            levelpage.refreshSensorLabels();
+        }
+    }
     public void updateAllSensors(int typeofsensor, int key, int value){
         if(typeofsensor == 0){
             tempsensorpage.updateSensorValues(key, value);

@@ -4,7 +4,8 @@
  */
 package irigui;
 
-import Operations.DataHandler;
+import Operations.Connection;
+
 
 /**
  *
@@ -19,6 +20,8 @@ public class IRIGui {
     public static String NodataType = "NoData";
     public static void main(String[] args) {
         MainScreen.getInstance();
-        DataHandler.getInstance();
+        Connection.getInstance().Connect("localhost", 25566);
+        Thread con = new Thread(Connection.getInstance());
+        con.start();
     }
 }

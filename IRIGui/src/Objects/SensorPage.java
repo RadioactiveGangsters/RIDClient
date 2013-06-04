@@ -98,11 +98,22 @@ public class SensorPage implements MouseListener{
         JLabel tempLabel = (JLabel)sensors.get(key);
         sensors.remove(key);
         String tempText = tempLabel.getText();
+        System.out.println("This is a test: " + tempLabel.getText());
+        System.out.println("This toooooo: " +  tempText.lastIndexOf(": "));
         tempText = tempText.substring(0, tempText.lastIndexOf(": "));
         String valuestring = Integer.toString(value);
         tempText = tempText + valuestring;
         tempLabel.setText(tempText);
         sensors.put(key, tempLabel);
+    }
+    
+    public void refreshSensorLabels(){
+        int x = 0;
+        valuepanel.removeAll();
+        while(x != amntofsensors){
+            valuepanel.add((JLabel)sensors.get(x));
+            x++;
+        }
     }
 
     private void makeGraph(final XYDataset dataset) {
@@ -181,6 +192,7 @@ public class SensorPage implements MouseListener{
         int index = 0;
         while(index != values.length){
             series1.add(index, values[index]);
+            index++;
         }
         XYSeriesCollection dataset = new XYSeriesCollection();
         dataset.addSeries(series1);

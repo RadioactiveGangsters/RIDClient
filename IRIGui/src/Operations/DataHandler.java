@@ -6,7 +6,6 @@ package Operations;
 
 import irigui.MainScreen;
 import irigui.WarningFrame;
-import sun.applet.Main;
 
 
 
@@ -33,28 +32,23 @@ public class DataHandler{
     
     public void handleData(int []dataarray){
         int index = 0;
-        if(dataarray[index] == 0){
-            System.out.println("Opcode = 0");
-        }
-        else if(dataarray[index] == 1){
-            index++;
-            System.out.println("Opcode = 1");
-        }else if(dataarray[index] == 2){
-            index++;
-            System.out.println("Opcode = 2");
+        if(dataarray[index] == 0||dataarray[index] == 1|| dataarray[index] == 2){
+            System.out.println("Opcode = 0, 1 of 2");
         }else if(dataarray[index] == 3){
             index++;
             int sensortype = dataarray[index];
             index++;
-            System.out.println("Opcode = 3");
             int amountofsensors = dataarray[index];
             index++;
-            while((index-3)<=amountofsensors){
+            
+            while(index<=(amountofsensors + 3)){
+                System.out.println("This is something? " + index + "And this: " + (amountofsensors + 3));
                 int temp = dataarray[index];
                 MainScreen.getInstance().updateAllSensors(sensortype, index-3, temp);
                 index++;
             }
             System.out.println("Update all sensors");
+            MainScreen.getInstance().refreshSensors(sensortype);
         }else if(dataarray[index] == 4){
             index++;
             int sensortype = dataarray[index];
