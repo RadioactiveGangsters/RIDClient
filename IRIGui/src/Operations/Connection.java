@@ -21,7 +21,7 @@ public class Connection implements Runnable {
 
     Socket connection;
     DataOutputStream output;
-    BufferedReader input;
+    InputStreamReader input;
     private static Connection instance = null;
 
     /**
@@ -44,9 +44,11 @@ public class Connection implements Runnable {
 
             connection = new Socket(ip, port);
             output = new DataOutputStream(connection.getOutputStream());
-            input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-
+            input = new InputStreamReader(connection.getInputStream());
+           
+            //
+            System.out.println("java connected");
+//
         } catch (UnknownHostException ex) {
             System.out.println(ex.getMessage());
         } catch (IOException ex) {
@@ -67,22 +69,37 @@ public class Connection implements Runnable {
     public void run() {
         int[] inputarray = null;
         int allsensorreq = 0;
-        char opcode = '0';
+        int opcode = '0';
+        System.out.println("voor while loop");
         while (connection.isConnected()) {
+            System.out.println("in while!");
             try {
-                opcode = (char) input.read();
+              //  System.out.println("connection = true");
+                //System.out.println("opcode = " + opcode);
+                //System.out.println("input = " + input);
+                opcode = input.read();
+                //System.out.println( "input = " + input);
+                System.out.println("input = " + input);
+                System.out.println("got ip");
+                //System.out.println("opcode = " + opcode);
             } catch (IOException ex) {
                 ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we de opcode van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
             }
             int opcodenr = Character.getNumericValue(opcode);
             char sensortype = '0';
             try {
+                System.out.println("reading sensortype");
                 sensortype = (char) input.read();
+                System.out.println("sensortype = " + sensortype);
             } catch (IOException ex) {
                 ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we de sensortype van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
             }
             int sensortypenr = Character.getNumericValue(sensortype);
-            switch (opcodenr) {
+            System.out.println("na sensortypenr!!");
+            System.out.println("opcode = " + opcode);
+            System.out.println("opcodenr = " + opcodenr);
+            switch (opcode) {
+                
                 case 0:
                     System.out.println("Not defined yet, see Berend for details, Opcode = 0");
                     break;
@@ -97,10 +114,12 @@ public class Connection implements Runnable {
                     try {
                         do {
                             amntofsensors = input.read();
+                            System.out.println("na amntofsensorzzz");
                         } while (amntofsensors == 0);
                     } catch (IOException ex) {
                         ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we het aantal sensoren van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
                     }
+                    System.out.println("na aantal sensoren enz.");
                     int arrayspace = amntofsensors + 3;
                     inputarray = new int[arrayspace];
                     int index = 0;
@@ -191,6 +210,7 @@ public class Connection implements Runnable {
                     inputarray[index] = sensornr;
                     break;
             }
+            System.out.println("buiten switch!");
             DataHandler.getInstance().handleData(inputarray);
 
 
@@ -200,5 +220,6 @@ public class Connection implements Runnable {
                 Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        
     }
 }
