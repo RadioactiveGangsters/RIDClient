@@ -47,6 +47,7 @@ public class ErrorFrame implements ActionListener{
         ErrorFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         ErrorFrame.setAlwaysOnTop(true);
         ErrorFrame.setVisible(true);
+        ErrorFrame.pack();
     }
 
     @Override

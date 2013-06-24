@@ -29,7 +29,7 @@ public class DataHandler{
         }
         return instance;
     }
-    
+
     public void handleData(int []dataarray){
         int index = 0;
         if(dataarray[index] == 0||dataarray[index] == 1|| dataarray[index] == 2){
@@ -53,12 +53,12 @@ public class DataHandler{
             index++;
             int amountofvalues = dataarray[index];
             index++;
-            int[]temparray = new int[amountofvalues];
-            while((index-3) <= amountofvalues){
+            int[]temparray = new int[dataarray.length - 3];
+            while(index <= (dataarray.length-1)){
                 temparray[index-3] = dataarray[index];
                 index++;
             }
-            MainScreen.getInstance().addValuesToGraph(sensortype, index-3, temparray);
+            MainScreen.getInstance().addValuesToGraph(sensortype, temparray.length, temparray);
             System.out.println("Opcode = 4");
             System.out.println("Get all the data neede to build the graph for the selected sensor");
         }else if(dataarray[index] == 5){

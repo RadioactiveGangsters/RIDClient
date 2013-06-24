@@ -5,6 +5,7 @@
 package Objects;
 
 
+import Operations.RequestHandler;
 import irigui.MainScreen;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -23,7 +24,6 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.general.Series;
-
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -50,17 +50,20 @@ public class SensorPage implements MouseListener{
     String selectedlabelsubstr;
     MainScreen mainscreen;
     XYSeries series1;
+    String type;
 
-    public SensorPage(String titletext, int amntofsensors, MainScreen mainscreen) {
+    public SensorPage(String titletext, int amntofsensors, MainScreen mainscreen, String type) {
         this.amntofsensors = amntofsensors;
         this.titletext = titletext;
         this.mainscreen = mainscreen;
+        this.type = type;
         sensors = new HashMap<>();
         //The line below must stay commented until we can safely connect to the server, we need to be sure to set the data in the initial setup!
         mainpanel = new JPanel(new BorderLayout());
         title = new JLabel(titletext);
         scroller = new JScrollPane();
         graphpanel = new JPanel();
+        series1 = new XYSeries("Tester!!");
         graphpanel.add(new JLabel("Klik op een sensor om een grafiek van die sensor te bekijken"));
         valuepanel = new JPanel(new GridLayout(30, 3));
         scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -86,6 +89,7 @@ public class SensorPage implements MouseListener{
             sensors.put(x, sensorlabel);
             x++;
         }
+        
         mainpanel.add(title, BorderLayout.PAGE_START);
         mainpanel.add(splitmids, BorderLayout.CENTER);
     }
@@ -98,8 +102,6 @@ public class SensorPage implements MouseListener{
         JLabel tempLabel = (JLabel)sensors.get(key);
         sensors.remove(key);
         String tempText = tempLabel.getText();
-        System.out.println("This is a test: " + tempLabel.getText());
-        System.out.println("This toooooo: " +  tempText.lastIndexOf(": "));
         tempText = tempText.substring(0, (tempText.lastIndexOf(": ")+1));
         String valuestring = Integer.toString(value);
         tempText = tempText + " " + valuestring;
@@ -114,13 +116,14 @@ public class SensorPage implements MouseListener{
             valuepanel.add((JLabel)sensors.get(x));
             x++;
         }
+        mainpanel.setVisible(true);
     }
 
     private void makeGraph(final XYDataset dataset) {
         final JFreeChart chart = ChartFactory.createXYLineChart(
                 selectedlabelsubstr, // chart title
                 "Tijd", // x axis label
-                "Value", // y axis label
+                "Waarde", // y axis label
                 dataset, // data
                 PlotOrientation.VERTICAL,
                 true, // include legend
@@ -147,6 +150,7 @@ public class SensorPage implements MouseListener{
         ChartPanel chartpanel = new ChartPanel(chart);
         graphpanel.removeAll();
         graphpanel.add(chartpanel);
+        mainpanel.setVisible(true);
 
     }
 
@@ -164,7 +168,10 @@ public class SensorPage implements MouseListener{
         //The Real WORK!!
         String full = selectedlabel.getText();
         selectedlabelsubstr = full.substring(0, full.lastIndexOf(":"));
+        String sensor = full.substring(full.lastIndexOf("r") + 2, full.lastIndexOf(": "));
+        int sensornr = Integer.parseInt(sensor);
         series1 = new XYSeries(selectedlabelsubstr);
+        RequestHandler.getInstance().requestGraphData(type, sensornr);
         //Some command to req data from the server
     }
 
@@ -190,8 +197,10 @@ public class SensorPage implements MouseListener{
     
     public void addValuesToGraph(int key, int []values){
         int index = 0;
-        while(index != values.length){
+        System.out.println("Valuessss: " + values.length);
+        while(index != (values.length)){
             series1.add(index, values[index]);
+            System.out.println(values[index]);
             index++;
         }
         XYSeriesCollection dataset = new XYSeriesCollection();

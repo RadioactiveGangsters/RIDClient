@@ -81,11 +81,11 @@ public class MainScreen {
 
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        tempsensorpage = new SensorPage("Temperatuur", 90, this);
-        velocitypage = new SensorPage("Snelheid", 110, this);
-        humiditypage = new SensorPage("Vochtigheid", 110, this);
-        fullemptypage = new SensorPage("Vol/Leeg", 80, this);
-        levelpage = new SensorPage("Niveau", 120, this);
+        tempsensorpage = new SensorPage("Temperatuur", 90, this, "Temperature");
+        velocitypage = new SensorPage("Snelheid", 110, this, "Velocity");
+        humiditypage = new SensorPage("Vochtigheid", 110, this, "Humidity");
+        fullemptypage = new SensorPage("Vol/Leeg", 80, this, "Fullness");
+        levelpage = new SensorPage("Niveau", 120, this, "Level");
 
         tabbedPane.addTab("Temperatuur", tempicon, tempsensorpage.getPanel());
         tabbedPane.addTab("Snelheid", velocityicon, velocitypage.getPanel());
@@ -145,15 +145,15 @@ public class MainScreen {
         return MainFrame.getHeight();
     }
     public void addValuesToGraph(int typeofsensor, int key, int[] values){
-        if(typeofsensor == 0){
+        if(typeofsensor == 1){
             tempsensorpage.addValuesToGraph(key, values);
-        }else if(typeofsensor == 1){
-            velocitypage.addValuesToGraph(key, values);
         }else if(typeofsensor == 2){
-            humiditypage.addValuesToGraph(key, values);
+            velocitypage.addValuesToGraph(key, values);
         }else if(typeofsensor == 3){
-            fullemptypage.addValuesToGraph(key, values);
+            humiditypage.addValuesToGraph(key, values);
         }else if(typeofsensor == 4){
+            fullemptypage.addValuesToGraph(key, values);
+        }else if(typeofsensor == 5){
             levelpage.addValuesToGraph(key, values);
         }
     }
