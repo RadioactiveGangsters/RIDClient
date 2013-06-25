@@ -4,6 +4,7 @@
  */
 package irigui;
 
+import Operations.DataHandler;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -30,8 +31,12 @@ public class WarningFrame implements Runnable, ActionListener {
     JButton OkButton;
     Clip clip;
     Font titlefont = new Font("SansSerif", Font.BOLD, 15);
+    String text;
+    int value;
 
-    public WarningFrame(String text, float value, int sensorid, String countermeasurement) {
+    public WarningFrame(String text, int value, int sensorid, String countermeasurement) {
+        this.text = text;
+        this.value = value;
         WarningFrame = new JDialog();
         WarningPanel = new JPanel(new BorderLayout());
         JLabel WarningText = new JLabel();
@@ -78,11 +83,18 @@ public class WarningFrame implements Runnable, ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(OkButton)) {
             WarningFrame.dispose();
+            DataHandler.getInstance().removeFromErrors(this);
             StopSound();
         }
     }
+    public String getText(){
+        return this.text;
+    }
+    public int getValue(){
+        return value;
+    }
 
-    public void PlaySound() {
+    private void PlaySound() {
         try {
          URL url = this.getClass().getClassLoader().getResource("resources/ALARM.WAV");
          AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);

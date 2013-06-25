@@ -25,6 +25,7 @@ public class ErrorFrame implements ActionListener{
     JButton CounterButton;
     String type;
     Font titlefont = new Font("SansSerif", Font.BOLD, 12);
+    static boolean erroroccured;
     
 
     public ErrorFrame(String text, String countermeasurement, String type) {
@@ -34,6 +35,7 @@ public class ErrorFrame implements ActionListener{
         JLabel WarningText = new JLabel();
         CounterButton = new JButton(countermeasurement);
         CounterButton.addActionListener(this);
+        erroroccured = true;
         WarningText.setFont(titlefont);
         WarningText.setHorizontalTextPosition(JLabel.CENTER);
         WarningText.setVerticalTextPosition(JLabel.CENTER);

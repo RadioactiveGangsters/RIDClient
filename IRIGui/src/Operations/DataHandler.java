@@ -6,21 +6,22 @@ package Operations;
 
 import irigui.MainScreen;
 import irigui.WarningFrame;
-
-
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *
  * @author user
  */
 //This Class will handle the distribution of data among the different SensorPages
-
-public class DataHandler{
+public class DataHandler {
 
     String data;
     private static DataHandler instance = null;
+    private ArrayList errors = new ArrayList();
+    boolean exists = false;
 
-    private DataHandler(){
+    private DataHandler() {
     }
 
     public static DataHandler getInstance() {
@@ -30,69 +31,188 @@ public class DataHandler{
         return instance;
     }
 
-    public void handleData(int []dataarray){
+    public void handleData(int[] dataarray) {
         int index = 0;
-        if(dataarray[index] == 0||dataarray[index] == 1|| dataarray[index] == 2){
+        if (dataarray[index] == 0 || dataarray[index] == 1 || dataarray[index] == 2) {
             System.out.println("Opcode = 0, 1 of 2");
-        }else if(dataarray[index] == 3){
+        } else if (dataarray[index] == 3) {
             index++;
             int sensortype = dataarray[index];
             index++;
             int amountofsensors = dataarray[index];
             index++;
-            
-            while(index<=(dataarray.length-1)){
+
+            while (index <= (dataarray.length - 1)) {
                 int temp = dataarray[index];
-                MainScreen.getInstance().updateAllSensors(sensortype, index-3, temp);
+                MainScreen.getInstance().updateAllSensors(sensortype, index - 3, temp);
                 index++;
             }
             MainScreen.getInstance().refreshSensors(sensortype);
-        }else if(dataarray[index] == 4){
+        } else if (dataarray[index] == 4) {
             index++;
             int sensortype = dataarray[index];
             index++;
             int amountofvalues = dataarray[index];
             index++;
-            int[]temparray = new int[dataarray.length - 3];
-            while(index <= (dataarray.length-1)){
-                temparray[index-3] = dataarray[index];
+            int[] temparray = new int[dataarray.length - 3];
+            while (index <= (dataarray.length - 1)) {
+                temparray[index - 3] = dataarray[index];
                 index++;
             }
             MainScreen.getInstance().addValuesToGraph(sensortype, temparray.length, temparray);
             System.out.println("Opcode = 4");
             System.out.println("Get all the data neede to build the graph for the selected sensor");
-        }else if(dataarray[index] == 5){
+        } else if (dataarray[index] == 5) {
             index++;
             int sensortype = dataarray[index];
             index++;
             int value = dataarray[index];
             index++;
+            int x = 0;
             WarningFrame warningframe;
-            if(dataarray[index] == 1){
-                warningframe = new WarningFrame("De temperatuursensor", value, dataarray[++index], "Koel af!");
-            }else if(dataarray[index] == 2){
-                warningframe = new WarningFrame("De temperatuursensor", value, dataarray[++index], "Warm op!");
-            }else if(dataarray[index] == 3){
-                warningframe = new WarningFrame("De snelheidssensor", value, dataarray[++index], "Verlaag de snelheid!");
-            }else if(dataarray[index] == 4){
-                warningframe = new WarningFrame("De snelheidssensor", value, dataarray[++index], "Verhoog de snelheid!");
-            }else if(dataarray[index] == 5){
-                warningframe = new WarningFrame("De vochtigheidssensor", value, dataarray[++index], "Verlaag de vochtigheid!");
-            }else if(dataarray[index] == 6){
-                warningframe = new WarningFrame("De vochtigheidssensor", value, dataarray[++index], "Verhoog de vochtigheid!");
-            }else if(dataarray[index] == 7){
-                warningframe = new WarningFrame("De vol/leeg sensor", value, dataarray[++index], "Leeg de tank");
-            }else if(dataarray[index] == 8){
-                warningframe = new WarningFrame("De vol/leeg sensor", value, dataarray[++index], "Vul de tank");
-            }else if(dataarray[index] == 9){
-                warningframe = new WarningFrame("De niveausensor", value, dataarray[++index], "Verlaag het niveau");
-            }else if(dataarray[index] == 10){
-                warningframe = new WarningFrame("De niveausensor", value, dataarray[++index], "Verhoog het niveau");
+            Iterator it = errors.iterator();
+            if (dataarray[index] == 1) {
+                while (it.hasNext()) {
+                    Error err = (Error) it.next();
+                    if (err.sensortype.equals("De temperatuursensor") && err.value == value) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    warningframe = new WarningFrame("De temperatuursensor", value, dataarray[++index], "Koel af!");
+                    errors.add(warningframe);
+                }
+            } else if (dataarray[index] == 2) {
+                while (it.hasNext()) {
+                    Error err = (Error) it.next();
+                    if (err.sensortype.equals("De temperatuursensor") && err.value == value) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    warningframe = new WarningFrame("De temperatuursensor", value, dataarray[++index], "Warm op!");
+                    errors.add(warningframe);
+                }
+            } else if (dataarray[index] == 3) {
+                while (it.hasNext()) {
+                    Error err = (Error) it.next();
+                    if (err.sensortype.equals("De snelheidssensor") && err.value == value) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    warningframe = new WarningFrame("De snelheidssensor", value, dataarray[++index], "Verlaag de snelheid!");
+                    errors.add(warningframe);
+                }
+            } else if (dataarray[index] == 4) {
+                while (it.hasNext()) {
+                    Error err = (Error) it.next();
+                    if (err.sensortype.equals("De snelheidssensor") && err.value == value) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    warningframe = new WarningFrame("De snelheidssensor", value, dataarray[++index], "Verhoog de snelheid!");
+                    errors.add(warningframe);
+                }
+            } else if (dataarray[index] == 5) {
+                while (it.hasNext()) {
+                    Error err = (Error) it.next();
+                    if (err.sensortype.equals("De vochtigheidssensor") && err.value == value) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    warningframe = new WarningFrame("De vochtigheidssensor", value, dataarray[++index], "Verlaag de vochtigheid!");
+                    errors.add(warningframe);
+                }
+            } else if (dataarray[index] == 6) {
+                while (it.hasNext()) {
+                    Error err = (Error) it.next();
+                    if (err.sensortype.equals("De vochtigheidssensor") && err.value == value) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    warningframe = new WarningFrame("De vochtigheidssensor", value, dataarray[++index], "Verhoog de vochtigheid!");
+                    errors.add(warningframe);
+                }
+            } else if (dataarray[index] == 7) {
+                while (it.hasNext()) {
+                    Error err = (Error) it.next();
+                    if (err.sensortype.equals("De vol/leeg sensor") && err.value == value) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    warningframe = new WarningFrame("De vol/leeg sensor", value, dataarray[++index], "Leeg de tank");
+                    errors.add(warningframe);
+                }
+            } else if (dataarray[index] == 8) {
+                while (it.hasNext()) {
+                    Error err = (Error) it.next();
+                    if (err.sensortype.equals("De vol/leeg sensor") && err.value == value) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    warningframe = new WarningFrame("De vol/leeg sensor", value, dataarray[++index], "Vul de tank");
+                    errors.add(warningframe);
+                }
+            } else if (dataarray[index] == 9) {
+                while (it.hasNext()) {
+                    Error err = (Error) it.next();
+                    if (err.sensortype.equals("De niveausensor") && err.value == value) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    warningframe = new WarningFrame("De niveausensor", value, dataarray[++index], "Verlaag het niveau");
+                    errors.add(warningframe);
+                }
+            } else if (dataarray[index] == 10) {
+                while (it.hasNext()) {
+                    Error err = (Error) it.next();
+                    if (err.sensortype.equals("De niveausensor") && err.value == value) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    warningframe = new WarningFrame("De niveausensor", value, dataarray[++index], "Verhoog het niveau");
+                    errors.add(warningframe);
+                }
             }
+            exists = false;
             System.out.println("Opcode = 5");
             System.out.println("ALARMMMMMM!!!!");
         }
-        
+
     }
 
+    public void removeFromErrors(WarningFrame warning) {
+        Iterator it = errors.iterator();
+        Error err = new Error(warning.getText(), warning.getValue());
+        errors.remove(err);
+    }
+
+    public class Error {
+
+        String sensortype;
+        int value;
+
+        public Error(String sensortype, int value) {
+            this.sensortype = sensortype;
+            this.value = value;
+        }
+    }
 }
