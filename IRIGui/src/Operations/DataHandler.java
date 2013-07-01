@@ -31,32 +31,32 @@ public class DataHandler {
         return instance;
     }
 
-    public void handleData(int[] dataarray) {
+    public void handleData(Object[] dataarray) {
         int index = 0;
         if (dataarray[index] == 0 || dataarray[index] == 1 || dataarray[index] == 2) {
             System.out.println("Opcode = 0, 1 of 2");
         } else if (dataarray[index] == 3) {
             index++;
-            int sensortype = dataarray[index];
+            int sensortype = (int) dataarray[index];
             index++;
-            int amountofsensors = dataarray[index];
+            int amountofsensors = (int) dataarray[index];
             index++;
 
             while (index <= (dataarray.length - 1)) {
-                int temp = dataarray[index];
+                int temp = (int) dataarray[index];
                 MainScreen.getInstance().updateAllSensors(sensortype, index - 3, temp);
                 index++;
             }
             MainScreen.getInstance().refreshSensors(sensortype);
         } else if (dataarray[index] == 4) {
             index++;
-            int sensortype = dataarray[index];
+            int sensortype = (int) dataarray[index];
             index++;
-            int amountofvalues = dataarray[index];
+            int amountofvalues = (int) dataarray[index];
             index++;
             int[] temparray = new int[dataarray.length - 3];
             while (index <= (dataarray.length - 1)) {
-                temparray[index - 3] = dataarray[index];
+                temparray[index - 3] = (int) dataarray[index];
                 index++;
             }
             MainScreen.getInstance().addValuesToGraph(sensortype, temparray.length, temparray);
@@ -64,9 +64,9 @@ public class DataHandler {
             System.out.println("Get all the data neede to build the graph for the selected sensor");
         } else if (dataarray[index] == 5) {
             index++;
-            int sensortype = dataarray[index];
+            int sensortype = (int) dataarray[index];
             index++;
-            int value = dataarray[index];
+            int value = (int) dataarray[index];
             index++;
             int x = 0;
             WarningFrame warningframe;
@@ -80,7 +80,7 @@ public class DataHandler {
                     }
                 }
                 if (!exists) {
-                    warningframe = new WarningFrame("De temperatuursensor", value, dataarray[++index], "Koel af!");
+                    warningframe = new WarningFrame("De temperatuursensor", value, (int)dataarray[++index], "Koel af!");
                     errors.add(warningframe);
                 }
             } else if (dataarray[index] == 2) {
@@ -92,7 +92,7 @@ public class DataHandler {
                     }
                 }
                 if (!exists) {
-                    warningframe = new WarningFrame("De temperatuursensor", value, dataarray[++index], "Warm op!");
+                    warningframe = new WarningFrame("De temperatuursensor", value, (int)dataarray[++index], "Warm op!");
                     errors.add(warningframe);
                 }
             } else if (dataarray[index] == 3) {
@@ -104,7 +104,7 @@ public class DataHandler {
                     }
                 }
                 if (!exists) {
-                    warningframe = new WarningFrame("De snelheidssensor", value, dataarray[++index], "Verlaag de snelheid!");
+                    warningframe = new WarningFrame("De snelheidssensor", value, (int)dataarray[++index], "Verlaag de snelheid!");
                     errors.add(warningframe);
                 }
             } else if (dataarray[index] == 4) {
@@ -116,7 +116,7 @@ public class DataHandler {
                     }
                 }
                 if (!exists) {
-                    warningframe = new WarningFrame("De snelheidssensor", value, dataarray[++index], "Verhoog de snelheid!");
+                    warningframe = new WarningFrame("De snelheidssensor", value, (int)dataarray[++index], "Verhoog de snelheid!");
                     errors.add(warningframe);
                 }
             } else if (dataarray[index] == 5) {
@@ -128,7 +128,7 @@ public class DataHandler {
                     }
                 }
                 if (!exists) {
-                    warningframe = new WarningFrame("De vochtigheidssensor", value, dataarray[++index], "Verlaag de vochtigheid!");
+                    warningframe = new WarningFrame("De vochtigheidssensor", value, (int)dataarray[++index], "Verlaag de vochtigheid!");
                     errors.add(warningframe);
                 }
             } else if (dataarray[index] == 6) {
@@ -140,7 +140,7 @@ public class DataHandler {
                     }
                 }
                 if (!exists) {
-                    warningframe = new WarningFrame("De vochtigheidssensor", value, dataarray[++index], "Verhoog de vochtigheid!");
+                    warningframe = new WarningFrame("De vochtigheidssensor", value, (int)dataarray[++index], "Verhoog de vochtigheid!");
                     errors.add(warningframe);
                 }
             } else if (dataarray[index] == 7) {
@@ -152,7 +152,7 @@ public class DataHandler {
                     }
                 }
                 if (!exists) {
-                    warningframe = new WarningFrame("De vol/leeg sensor", value, dataarray[++index], "Leeg de tank");
+                    warningframe = new WarningFrame("De vol/leeg sensor", value, (int)dataarray[++index], "Leeg de tank");
                     errors.add(warningframe);
                 }
             } else if (dataarray[index] == 8) {
@@ -164,7 +164,7 @@ public class DataHandler {
                     }
                 }
                 if (!exists) {
-                    warningframe = new WarningFrame("De vol/leeg sensor", value, dataarray[++index], "Vul de tank");
+                    warningframe = new WarningFrame("De vol/leeg sensor", value, (int)dataarray[++index], "Vul de tank");
                     errors.add(warningframe);
                 }
             } else if (dataarray[index] == 9) {
@@ -176,7 +176,7 @@ public class DataHandler {
                     }
                 }
                 if (!exists) {
-                    warningframe = new WarningFrame("De niveausensor", value, dataarray[++index], "Verlaag het niveau");
+                    warningframe = new WarningFrame("De niveausensor", value, (int)dataarray[++index], "Verlaag het niveau");
                     errors.add(warningframe);
                 }
             } else if (dataarray[index] == 10) {
@@ -188,7 +188,7 @@ public class DataHandler {
                     }
                 }
                 if (!exists) {
-                    warningframe = new WarningFrame("De niveausensor", value, dataarray[++index], "Verhoog het niveau");
+                    warningframe = new WarningFrame("De niveausensor", value, (int)dataarray[++index], "Verhoog het niveau");
                     errors.add(warningframe);
                 }
             }

@@ -23,6 +23,8 @@ public class Connection implements Runnable {
     DataOutputStream output;
     BufferedReader input;
     private static Connection instance = null;
+    String ip;
+    int port;
 
     /**
      * Initialize the connection and streams This class is now Singleton, since
@@ -40,8 +42,9 @@ public class Connection implements Runnable {
     }
 
     public void Connect(final String ip, final int port) {
+        this.ip = ip;
+        this.port = port;
         try {
-
             connection = new Socket(ip, port);
             output = new DataOutputStream(connection.getOutputStream());
             input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -63,37 +66,28 @@ public class Connection implements Runnable {
         }
     }
 
-    public void sendRequest(final int request, String typeofsensor, int sensornr) throws IOException {
+    public void sendRequest(final int request, String typeofsensor) throws IOException {
         if (request == 3) {
             output.write(request);
         } else {
             System.out.println("Request: " + request);
             output.write(request);
-            output.writeInt(request);
+            output.write(typeofsensor.length());
             output.writeChars(typeofsensor);
-            System.out.println("Type of sensor " + typeofsensor);
-            output.writeInt(sensornr);
-            System.out.println("sensornr: " + sensornr);
         }
     }
 
     @Override
     public void run() {
         while (instance.isConnected()) {
-            int[] inputarray = null;
+            ArrayList inputarray = new ArrayList();
+            //int[] inputarray = null;
             char opcode = '0';
-//            try {
-//                input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-//            } catch (IOException ex) {
-//                Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
-//            }
             try {
                 opcode = (char) input.read();
             } catch (IOException ex) {
                 ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we de opcode van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
             }
-            System.out.println("Data received!!" + opcode);
-            int opcodenr = Character.getNumericValue(opcode);
             char sensortype = '0';
             try {
                 do {
@@ -103,8 +97,7 @@ public class Connection implements Runnable {
             } catch (IOException ex) {
                 ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we de sensortype van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
             }
-            int sensortypenr = Character.getNumericValue(sensortype);
-            switch (opcodenr) {
+            switch (opcode) {
                 case 0:
                     System.out.println("Not defined yet, see Berend for details, Opcode = 0");
                     break;
@@ -124,22 +117,20 @@ public class Connection implements Runnable {
                     } catch (IOException ex) {
                         ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we het aantal sensoren van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
                     }
-                    int arrayspace = amntofsensors + 3;
-                    inputarray = new int[arrayspace];
                     int index = 0;
-                    inputarray[index] = opcodenr;
+                    inputarray.add(opcode);
                     index++;
-                    inputarray[index] = sensortypenr;
+                    inputarray.add(sensortype);
                     index++;
-                    inputarray[index] = amntofsensors;
-
+                    inputarray.add(amntofsensors);
+                    index++;
                     int temp;
                     while (index <= (amntofsensors + 2)) {
                         try {
                             do {
                                 temp = input.read();
                             } while (temp == 0);
-                            inputarray[index] = temp;
+                            inputarray.add(temp);
                         } catch (IOException ex) {
                             ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we een waarde van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
                         }
@@ -154,14 +145,12 @@ public class Connection implements Runnable {
                     } catch (IOException ex) {
                         ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we het aantal sensoren van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
                     }
-                    arrayspace = amntofvalues + 3;
-                    inputarray = new int[arrayspace];
                     index = 0;
-                    inputarray[index] = opcodenr;
+                    inputarray.add(opcode);
                     index++;
-                    inputarray[index] = sensortypenr;
+                    inputarray.add(sensortype);
                     index++;
-                    inputarray[index] = amntofvalues;
+                    inputarray.add(amntofvalues);
                     index++;
 
                     while (index <= (amntofvalues + 2)) {
@@ -169,7 +158,7 @@ public class Connection implements Runnable {
                             do {
                                 temp = input.read();
                             } while (temp == 0);
-                            inputarray[index] = temp;
+                            inputarray.add(temp);
                         } catch (IOException ex) {
                             ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we een waarde van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
                         }
@@ -203,21 +192,22 @@ public class Connection implements Runnable {
                     } catch (IOException ex) {
                         Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    inputarray = new int[6];
+                    
                     index = 0;
-                    inputarray[index] = opcodenr;
+                    inputarray.add(opcode);
                     index++;
-                    inputarray[index] = sensortypenr;
+                    inputarray.add(sensortype);
                     index++;
-                    inputarray[index] = value;
+                    inputarray.add(value);
                     index++;
-                    inputarray[index] = counteractiontype;
+                    inputarray.add(counteractiontype);
                     index++;
-                    inputarray[index] = sensornr;
+                    inputarray.add(sensornr);
                     break;
             }
-            DataHandler.getInstance().handleData(inputarray);
+            DataHandler.getInstance().handleData(inputarray.toArray());
 
         }
+        Connect(ip, port);
     }
 }

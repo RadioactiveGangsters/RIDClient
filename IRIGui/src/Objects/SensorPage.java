@@ -171,7 +171,7 @@ public class SensorPage implements MouseListener{
         String sensor = full.substring(full.lastIndexOf("r") + 2, full.lastIndexOf(": "));
         int sensornr = Integer.parseInt(sensor);
         series1 = new XYSeries(selectedlabelsubstr);
-        RequestHandler.getInstance().requestGraphData(type, sensornr);
+        RequestHandler.getInstance().requestGraphData(full);
         //Some command to req data from the server
     }
 
