@@ -80,8 +80,7 @@ public class Connection implements Runnable {
     @Override
     public void run() {
         while (instance.isConnected()) {
-            ArrayList inputarray = new ArrayList();
-            //int[] inputarray = null;
+            ArrayList inputarray = null;
             char opcode = '0';
             try {
                 opcode = (char) input.read();
@@ -105,10 +104,15 @@ public class Connection implements Runnable {
                     System.out.println("Not defined yet, see Berend for details, Opcode = 1");
                     break;
                 case 2:
-                    System.out.println("Not defined yet, see Berend for details, Opcode = 2");
+                    try {
+                        output.write(0x02);
+                    } catch (IOException ex) {
+                        ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we kunnen reageren op de ping packets", "Herverbinden", IRIGui.ConnectionType);
+                    }
                     break;
                 case 3:
                     System.out.println("Case 3: Connection thread");
+                    inputarray = new ArrayList();
                     int amntofsensors = 0;
                     try {
                         do {
@@ -139,6 +143,7 @@ public class Connection implements Runnable {
                     }
                     break;
                 case 4:
+                    inputarray = new ArrayList();
                     int amntofvalues = 0;
                     try {
                         amntofvalues = input.read();
@@ -167,6 +172,7 @@ public class Connection implements Runnable {
                     }
                     break;
                 case 5:
+                    inputarray = new ArrayList();
                     System.out.println("Alarm!!");
                     int value = 1;
                     try {
@@ -192,7 +198,7 @@ public class Connection implements Runnable {
                     } catch (IOException ex) {
                         Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    
+
                     index = 0;
                     inputarray.add(opcode);
                     index++;
@@ -205,7 +211,9 @@ public class Connection implements Runnable {
                     inputarray.add(sensornr);
                     break;
             }
-            DataHandler.getInstance().handleData(inputarray.toArray());
+            if (inputarray != null) {
+                DataHandler.getInstance().handleData(inputarray.toArray());
+            }
 
         }
         Connect(ip, port);
