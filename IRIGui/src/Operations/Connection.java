@@ -72,8 +72,8 @@ public class Connection implements Runnable {
         } else {
             System.out.println("Request: " + request);
             output.write(request);
-            output.write(typeofsensor.length());
-            output.writeChars(typeofsensor);
+            output.writeInt("Temperature1".length());
+            output.writeBytes("Temperature1");
         }
     }
 
@@ -88,14 +88,14 @@ public class Connection implements Runnable {
                 ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we de opcode van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
             }
             char sensortype = '0';
-            try {
+            /*try {
                 do {
                     sensortype = (char) input.read();
                 } while (sensortype == 0);
 
             } catch (IOException ex) {
                 ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we de sensortype van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
-            }
+            }*/
             switch (opcode) {
                 case 0:
                     System.out.println("Not defined yet, see Berend for details, Opcode = 0");
@@ -143,6 +143,7 @@ public class Connection implements Runnable {
                     }
                     break;
                 case 4:
+				 System.out.println("got graph");
                     inputarray = new ArrayList();
                     int amntofvalues = 0;
                     try {

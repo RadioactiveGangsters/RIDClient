@@ -1,5 +1,9 @@
 *.class
 
+# netbeans #
+private.properties
+IRIGui/nbproject/private
+
 # Package Files #
 IRIGui.jar
 *.war
