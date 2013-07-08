@@ -21,7 +21,7 @@ public class Connection implements Runnable {
 
     Socket connection;
     DataOutputStream output;
-    BufferedReader input;
+    DataInputStream input;
     private static Connection instance = null;
     String ip;
     int port;
@@ -47,7 +47,7 @@ public class Connection implements Runnable {
         try {
             connection = new Socket(ip, port);
             output = new DataOutputStream(connection.getOutputStream());
-            input = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            input = new DataInputStream(connection.getInputStream());
 
 
         } catch (UnknownHostException ex) {
