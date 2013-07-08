@@ -25,10 +25,10 @@ public class MainScreen {
     JFrame MainFrame;
     Connection connection;
     SensorPage tempsensorpage;
-    SensorPage velocitypage;
-    SensorPage humiditypage;
-    SensorPage fullemptypage;
-    SensorPage levelpage;
+    SensorPage flowpage;
+    SensorPage pressurepage;
+    SensorPage fullnesspage;
+    SensorPage radiationpage;
     private static MainScreen instance = null;
     
 
@@ -46,28 +46,28 @@ public class MainScreen {
             System.err.println("Illegal acces to Look and Feel");
         }
 
-        ImageIcon tempicon = null;
-        ImageIcon niveauicon = null;
-        ImageIcon humidicon = null;
-        ImageIcon velocityicon = null;
-        ImageIcon fullemptyicon = null;
+        ImageIcon TemperatureIcon = null;
+        ImageIcon FlowIcon = null;
+        ImageIcon PressureIcon = null;
+        ImageIcon FullnessIcon = null;
+        ImageIcon RadiationIcon = null;
         BufferedImage imagetoresize;
         PhotoResize photoresizer = new PhotoResize();
 
         try {
-            imagetoresize = ImageIO.read(new File("resources//hotcold.jpg"));
-            tempicon = new ImageIcon(photoresizer.resizeImage(imagetoresize, 10, 10));
-            imagetoresize = ImageIO.read(new File("resources//level.png"));
-            niveauicon = new ImageIcon(photoresizer.resizeImage(imagetoresize, 10, 10));
-            imagetoresize = ImageIO.read(new File("resources//humidity.jpg"));
-            humidicon = new ImageIcon(photoresizer.resizeImage(imagetoresize, 10, 10));
-            imagetoresize = ImageIO.read(new File("resources//velocity.png"));
-            velocityicon = new ImageIcon(photoresizer.resizeImage(imagetoresize, 10, 10));
-            imagetoresize = ImageIO.read(new File("resources//full.empty.png"));
-            fullemptyicon = new ImageIcon(photoresizer.resizeImage(imagetoresize, 10, 10));
+            imagetoresize = ImageIO.read(new File("resources//TemperatureIcon.png"));
+            TemperatureIcon = new ImageIcon(photoresizer.resizeImage(imagetoresize, 10, 10));
+            imagetoresize = ImageIO.read(new File("resources//FlowIcon.png"));
+            FlowIcon = new ImageIcon(photoresizer.resizeImage(imagetoresize, 10, 10));
+            imagetoresize = ImageIO.read(new File("resources//PressureIcon.png"));
+            PressureIcon = new ImageIcon(photoresizer.resizeImage(imagetoresize, 10, 10));
+            imagetoresize = ImageIO.read(new File("resources//FullnessIcon.png"));
+            FullnessIcon = new ImageIcon(photoresizer.resizeImage(imagetoresize, 10, 10));
+            imagetoresize = ImageIO.read(new File("resources//RadiationIcon.png"));
+            RadiationIcon = new ImageIcon(photoresizer.resizeImage(imagetoresize, 10, 10));
 
         } catch (IOException e) {
-            System.out.println("Fout in het laden!");
+            System.out.println("Error with loading!");
             e.printStackTrace();
         }
         ConnectToServer();
@@ -81,17 +81,17 @@ public class MainScreen {
 
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        tempsensorpage = new SensorPage("Temperatuur", 90, this, "Temperature");
-        velocitypage = new SensorPage("Snelheid", 110, this, "Velocity");
-        humiditypage = new SensorPage("Vochtigheid", 110, this, "Humidity");
-        fullemptypage = new SensorPage("Vol/Leeg", 80, this, "Fullness");
-        levelpage = new SensorPage("Niveau", 120, this, "Level");
+        tempsensorpage = new SensorPage("Temperature", 150, this, "Temperature");
+        flowpage = new SensorPage("Flow", 70, this, "Flow");
+        pressurepage = new SensorPage("Pressure", 100, this, "Pressure");
+        fullnesspage = new SensorPage("Fullness", 30, this, "Fullness");
+        radiationpage = new SensorPage("Radiation", 150, this, "Radiation");
 
-        tabbedPane.addTab("Temperatuur", tempicon, tempsensorpage.getPanel());
-        tabbedPane.addTab("Snelheid", velocityicon, velocitypage.getPanel());
-        tabbedPane.addTab("Vochtigheid", humidicon, humiditypage.getPanel());
-        tabbedPane.addTab("Vol/leeg", fullemptyicon, fullemptypage.getPanel());
-        tabbedPane.addTab("Niveau", niveauicon, levelpage.getPanel());
+        tabbedPane.addTab("Temperature", TemperatureIcon, tempsensorpage.getPanel());
+        tabbedPane.addTab("Flow", FlowIcon, flowpage.getPanel());
+        tabbedPane.addTab("Pressure", PressureIcon, pressurepage.getPanel());
+        tabbedPane.addTab("Fullness", FullnessIcon, fullnesspage.getPanel());
+        tabbedPane.addTab("Radiation", RadiationIcon, radiationpage.getPanel());
 
         MainFrame.add(tabbedPane);
         MainFrame.setVisible(true);
@@ -108,26 +108,26 @@ public class MainScreen {
         if(typeofsensor == 0){
             tempsensorpage.refreshSensorLabels();
         }else if(typeofsensor == 1){
-            velocitypage.refreshSensorLabels();
+            flowpage.refreshSensorLabels();
         }else if(typeofsensor == 2){
-            humiditypage.refreshSensorLabels();
+            pressurepage.refreshSensorLabels();
         }else if(typeofsensor == 3){
-            fullemptypage.refreshSensorLabels();
+            fullnesspage.refreshSensorLabels();
         }else if(typeofsensor == 4){
-            levelpage.refreshSensorLabels();
+            radiationpage.refreshSensorLabels();
         }
     }
     public void updateAllSensors(int typeofsensor, int key, int value){
         if(typeofsensor == 0){
             tempsensorpage.updateSensorValues(key, value);
         }else if(typeofsensor == 1){
-            velocitypage.updateSensorValues(key, value);
+            flowpage.updateSensorValues(key, value);
         }else if(typeofsensor == 2){
-            humiditypage.updateSensorValues(key, value);
+            pressurepage.updateSensorValues(key, value);
         }else if(typeofsensor == 3){
-            fullemptypage.updateSensorValues(key, value);
+            fullnesspage.updateSensorValues(key, value);
         }else if(typeofsensor == 4){
-            levelpage.updateSensorValues(key, value);
+            radiationpage.updateSensorValues(key, value);
         }
     }
     
@@ -148,13 +148,13 @@ public class MainScreen {
         if(typeofsensor == 1){
             tempsensorpage.addValuesToGraph(key, values);
         }else if(typeofsensor == 2){
-            velocitypage.addValuesToGraph(key, values);
+            flowpage.addValuesToGraph(key, values);
         }else if(typeofsensor == 3){
-            humiditypage.addValuesToGraph(key, values);
+            pressurepage.addValuesToGraph(key, values);
         }else if(typeofsensor == 4){
-            fullemptypage.addValuesToGraph(key, values);
+            fullnesspage.addValuesToGraph(key, values);
         }else if(typeofsensor == 5){
-            levelpage.addValuesToGraph(key, values);
+            radiationpage.addValuesToGraph(key, values);
         }
     }
 }
