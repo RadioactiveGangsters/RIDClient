@@ -31,7 +31,7 @@ public class RequestHandler implements Runnable {
     public void requestGraphData(String sensortypename){
          if(Connection.getInstance().isConnected()) {
             try {
-                Connection.getInstance().sendRequest(REQUEST_GRAPH_DATA, sensortypename);
+                Connection.getInstance().sendRequest(REQUEST_GRAPH_DATA, sensortypename, null, null);
             } catch (IOException ex) {
                 Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -42,7 +42,7 @@ public class RequestHandler implements Runnable {
     public void run() {
         while (Connection.getInstance().isConnected()) {
             try {
-                Connection.getInstance().sendRequest(REQUEST_ALL_SENSORS, null);
+                Connection.getInstance().sendRequest(REQUEST_ALL_SENSORS, null, null, null);
             } catch (IOException ex) {
                 Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
             }

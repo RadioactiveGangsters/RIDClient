@@ -4,16 +4,21 @@
  */
 package Objects;
 
-
+import Operations.Connection;
 import Operations.RequestHandler;
 import irigui.MainScreen;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.border.Border;
 import org.jfree.chart.ChartFactory;
@@ -27,12 +32,13 @@ import org.jfree.data.general.Series;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.ui.action.ActionMenuItem;
 
 /**
  *
  * @author user
  */
-public class SensorPage implements MouseListener{
+public class SensorPage implements MouseListener, ActionListener {
 
     private final Font titlefont = new Font("SansSerif", Font.BOLD, 48);
     private final int amntofsensors;
@@ -43,14 +49,19 @@ public class SensorPage implements MouseListener{
     private JPanel valuepanel;
     private final JLabel title;
     private final String titletext;
+    JFrame minmaxframe;
     private JScrollPane scroller;
     private final JSplitPane splitmids;
+    JTextField min;
+    JTextField max;
     HashMap<Integer, JLabel> sensors;
     JLabel selectedlabel;
     String selectedlabelsubstr;
     MainScreen mainscreen;
     XYSeries series1;
     String type;
+    JPopupMenu rmbmenu;
+    JMenuItem AdjustSettings;
 
     public SensorPage(String titletext, int amntofsensors, MainScreen mainscreen, String type) {
         this.amntofsensors = amntofsensors;
@@ -77,19 +88,23 @@ public class SensorPage implements MouseListener{
         splitmids.setDividerLocation(mainscreen.getFrameHeight() / 2);
         title.setFont(titlefont);
         splitmids.setEnabled(false);
-
+        AdjustSettings = new ActionMenuItem("Configureren");
+        rmbmenu = new JPopupMenu();
+        AdjustSettings.addActionListener(this);
+        rmbmenu.add(AdjustSettings);
 
         //Loop to add the senors
         int x = 0;
         JLabel sensorlabel;
         while (x != amntofsensors) {
             sensorlabel = new JLabel(titletext + " sensor " + (x + 1) + ": ");
+            sensorlabel.setComponentPopupMenu(rmbmenu);
             sensorlabel.addMouseListener(this);
             valuepanel.add(sensorlabel);
             sensors.put(x, sensorlabel);
             x++;
         }
-        
+
         mainpanel.add(title, BorderLayout.PAGE_START);
         mainpanel.add(splitmids, BorderLayout.CENTER);
     }
@@ -97,23 +112,23 @@ public class SensorPage implements MouseListener{
     public JPanel getPanel() {
         return mainpanel;
     }
-    
-    public void updateSensorValues(int key, int value){
-        JLabel tempLabel = (JLabel)sensors.get(key);
+
+    public void updateSensorValues(int key, int value) {
+        JLabel tempLabel = (JLabel) sensors.get(key);
         sensors.remove(key);
         String tempText = tempLabel.getText();
-        tempText = tempText.substring(0, (tempText.lastIndexOf(": ")+1));
+        tempText = tempText.substring(0, (tempText.lastIndexOf(": ") + 1));
         String valuestring = Integer.toString(value);
         tempText = tempText + " " + valuestring;
         tempLabel.setText(tempText);
         sensors.put(key, tempLabel);
     }
-    
-    public void refreshSensorLabels(){
+
+    public void refreshSensorLabels() {
         int x = 0;
         valuepanel.removeAll();
-        while(x != amntofsensors){
-            valuepanel.add((JLabel)sensors.get(x));
+        while (x != amntofsensors) {
+            valuepanel.add((JLabel) sensors.get(x));
             x++;
         }
         mainpanel.setVisible(true);
@@ -156,27 +171,30 @@ public class SensorPage implements MouseListener{
 
     @Override
     public void mouseClicked(MouseEvent e) {
+    }
 
+    @Override
+    public void mousePressed(MouseEvent e) {
         //Just handling a border, for the user to recognize that the JLabel is in fact clicked
+        System.out.println("Clicked!");
         if (selectedlabel != null) {
             selectedlabel.setBorder(null);
         }
         selectedlabel = (JLabel) e.getSource();
         Border lineBorder = BorderFactory.createLineBorder(Color.BLACK);
         selectedlabel.setBorder(lineBorder);
-        
-        //The Real WORK!!
-        String full = selectedlabel.getText();
-        selectedlabelsubstr = full.substring(0, full.lastIndexOf(":"));
-        String sensor = full.substring(full.lastIndexOf("r") + 2, full.lastIndexOf(": "));
-        int sensornr = Integer.parseInt(sensor);
-        series1 = new XYSeries(selectedlabelsubstr);
-        RequestHandler.getInstance().requestGraphData(full);
-        //Some command to req data from the server
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
+        if (SwingUtilities.isRightMouseButton(e)) {
+        } else {
+            System.out.println("LeftMouse");
+            //The Real WORK!!
+            String full = selectedlabel.getText();
+            selectedlabelsubstr = full.substring(0, full.lastIndexOf(":"));
+            String sensor = full.substring(full.lastIndexOf("r") + 2, full.lastIndexOf(": "));
+            int sensornr = Integer.parseInt(sensor);
+            series1 = new XYSeries(selectedlabelsubstr);
+            RequestHandler.getInstance().requestGraphData(full);
+            //Some command to req data from the server
+        }
     }
 
     @Override
@@ -190,15 +208,15 @@ public class SensorPage implements MouseListener{
     @Override
     public void mouseExited(MouseEvent e) {
     }
-    
-    public HashMap getSensors(){
+
+    public HashMap getSensors() {
         return sensors;
     }
-    
-    public void addValuesToGraph(int key, int []values){
+
+    public void addValuesToGraph(int key, int[] values) {
         int index = 0;
         System.out.println("Valuessss: " + values.length);
-        while(index != (values.length)){
+        while (index != (values.length)) {
             series1.add(index, values[index]);
             System.out.println(values[index]);
             index++;
@@ -207,5 +225,52 @@ public class SensorPage implements MouseListener{
         dataset.addSeries(series1);
         makeGraph(dataset);
     }
-    
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource().equals(AdjustSettings)) {
+            minmaxframe = new JFrame("Instellen Min/Max waardes");
+            minmaxframe.setLayout(new BorderLayout());
+            minmaxframe.setLocationRelativeTo(null);
+            minmaxframe.setSize(200, 100);
+            min = new JTextField("Minimale waarde");
+            max = new JTextField("Maximale waarde");
+            JButton apply = new JButton("Toepassen");
+            apply.addActionListener(this);
+
+            minmaxframe.add(min, BorderLayout.PAGE_START);
+            minmaxframe.add(max, BorderLayout.CENTER);
+            minmaxframe.add(apply, BorderLayout.PAGE_END);
+            minmaxframe.setVisible(true);
+        } else {
+            System.out.println("Settings toepassen");
+            minmaxframe.dispose();
+            String minText = min.getText();
+            String maxText = max.getText();
+
+            String text = selectedlabel.getText();
+            if (isInteger(minText) && isInteger(maxText)) {
+                String full = selectedlabel.getText();
+                String part1 = full.substring(0, full.lastIndexOf(" sensor"));
+                String part2 = full.substring(full.lastIndexOf("r ") + 2, full.lastIndexOf(":"));
+                full = part1 + part2;
+                try {
+                    Connection.getInstance().sendRequest(6, full, minText, maxText);
+                } catch (IOException ex) {
+                    Logger.getLogger(SensorPage.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                //Fuck this shit
+            }
+        }
+    }
+
+    private static boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
 }

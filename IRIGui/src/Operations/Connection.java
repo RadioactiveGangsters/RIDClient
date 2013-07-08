@@ -66,9 +66,14 @@ public class Connection implements Runnable {
         }
     }
 
-    public void sendRequest(final int request, String typeofsensor) throws IOException {
+    public void sendRequest(final int request, String typeofsensor, String min, String max) throws IOException {
         if (request == 3) {
             output.write(request);
+        }else if(request == 6){
+            output.write(request);
+            output.writeInt(typeofsensor.length());
+            output.writeInt(Integer.parseInt(min));
+            output.writeInt(Integer.parseInt(max));
         } else {
             System.out.println("Request: " + request);
             output.write(request);
