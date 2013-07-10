@@ -88,19 +88,19 @@ public class Connection implements Runnable {
             ArrayList inputarray = null;
             char opcode = '0';
             try {
-                opcode = (char) input.read();
+                opcode = (char)input.readByte();
             } catch (IOException ex) {
                 ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we de opcode van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
             }
             char sensortype = '0';
-            /*try {
+            try {
                 do {
-                    sensortype = (char) input.read();
+                    sensortype = (char) input.readByte();
                 } while (sensortype == 0);
 
             } catch (IOException ex) {
                 ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we de sensortype van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
-            }*/
+            }
             switch (opcode) {
                 case 0:
                     System.out.println("Not defined yet, see Berend for details, Opcode = 0");
@@ -121,7 +121,7 @@ public class Connection implements Runnable {
                     int amntofsensors = 0;
                     try {
                         do {
-                            amntofsensors = input.read();
+                            amntofsensors = input.readInt();
                         } while (amntofsensors == 0);
                     } catch (IOException ex) {
                         ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we het aantal sensoren van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
@@ -137,7 +137,7 @@ public class Connection implements Runnable {
                     while (index <= (amntofsensors + 2)) {
                         try {
                             do {
-                                temp = input.read();
+                                temp = input.readInt();
                             } while (temp == 0);
                             inputarray.add(temp);
                         } catch (IOException ex) {
@@ -152,7 +152,7 @@ public class Connection implements Runnable {
                     inputarray = new ArrayList();
                     int amntofvalues = 0;
                     try {
-                        amntofvalues = input.read();
+                        amntofvalues = input.readInt();
                     } catch (IOException ex) {
                         ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we het aantal sensoren van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
                     }
@@ -167,7 +167,7 @@ public class Connection implements Runnable {
                     while (index <= (amntofvalues + 2)) {
                         try {
                             do {
-                                temp = input.read();
+                                temp = input.readInt();
                             } while (temp == 0);
                             inputarray.add(temp);
                         } catch (IOException ex) {
@@ -183,7 +183,7 @@ public class Connection implements Runnable {
                     int value = 1;
                     try {
                         do {
-                            value = input.read();
+                            value = input.readInt();
                         } while (value == 0);
                     } catch (IOException ex) {
                         Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
@@ -191,7 +191,7 @@ public class Connection implements Runnable {
                     int counteractiontype = -1;
                     try {
                         do {
-                            counteractiontype = input.read();
+                            counteractiontype = input.readInt();
                         } while (counteractiontype == 0);
                     } catch (IOException ex) {
                         Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
@@ -199,7 +199,7 @@ public class Connection implements Runnable {
                     int sensornr = 0;
                     try {
                         do {
-                            sensornr = input.read();
+                            sensornr = input.readInt();
                         } while (sensornr == 0);
                     } catch (IOException ex) {
                         Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
