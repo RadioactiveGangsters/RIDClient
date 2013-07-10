@@ -25,7 +25,7 @@ public class IRIGui {
         Connection.getInstance().Connect("localhost", 4444);
         Thread con = new Thread(Connection.getInstance());
         con.start();
-//        Thread requester = new Thread(RequestHandler.getInstance());
-//        requester.start();
+        Thread requester = new Thread(RequestHandler.getInstance());
+        requester.start();
     }
 }
