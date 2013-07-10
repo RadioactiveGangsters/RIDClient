@@ -37,7 +37,7 @@ public class RequestHandler implements Runnable {
             }
          }
     }
-
+    
     @Override
     public void run() {
         while (Connection.getInstance().isConnected()) {

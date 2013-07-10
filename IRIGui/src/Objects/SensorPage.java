@@ -74,7 +74,7 @@ public class SensorPage implements MouseListener, ActionListener {
         title = new JLabel(titletext);
         scroller = new JScrollPane();
         graphpanel = new JPanel();
-        series1 = new XYSeries("Tester!!");
+        series1 = new XYSeries(type);
         graphpanel.add(new JLabel("Klik op een sensor om een grafiek van die sensor te bekijken"));
         valuepanel = new JPanel(new GridLayout(30, 3));
         scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -232,6 +232,8 @@ public class SensorPage implements MouseListener, ActionListener {
             minmaxframe = new JFrame("Instellen Min/Max waardes");
             minmaxframe.setLayout(new BorderLayout());
             minmaxframe.setLocationRelativeTo(null);
+            minmaxframe.setAlwaysOnTop(true);
+            minmaxframe.setResizable(false);
             minmaxframe.setSize(200, 100);
             min = new JTextField("Minimale waarde");
             max = new JTextField("Maximale waarde");

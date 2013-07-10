@@ -7,11 +7,19 @@ package irigui;
 import Objects.SensorPage;
 import Operations.Connection;
 import Operations.PhotoResize;
+import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.Menu;
+import java.awt.MenuBar;
+import java.awt.MenuItem;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -19,7 +27,7 @@ import javax.swing.*;
  *
  * @author user
  */
-public class MainScreen {
+public class MainScreen implements ActionListener {
 
     Font titlefont = new Font("SansSerif", Font.BOLD, 48);
     JFrame MainFrame;
@@ -30,7 +38,12 @@ public class MainScreen {
     SensorPage fullnesspage;
     SensorPage radiationpage;
     private static MainScreen instance = null;
-    
+    MenuBar menuBar;
+    Menu menu;
+    MenuItem menuItem;
+    JFrame flowadjustframe;
+    JTextField min;
+    JTextField max;
 
     private MainScreen() {
         try {
@@ -79,6 +92,14 @@ public class MainScreen {
         MainFrame.setSize(xSize, ySize);
         MainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        menuBar = new MenuBar();
+        menu = new Menu("Configureren");
+        menu.addActionListener(this);
+        menuBar.add(menu);
+        menuItem = new MenuItem("Flow aanpassen");
+        menuItem.addActionListener(this);
+        menu.add(menuItem);
+
         JTabbedPane tabbedPane = new JTabbedPane();
 
         tempsensorpage = new SensorPage("Temperature", 150, this, "Temperature");
@@ -93,68 +114,111 @@ public class MainScreen {
         tabbedPane.addTab("Fullness", FullnessIcon, fullnesspage.getPanel());
         tabbedPane.addTab("Radiation", RadiationIcon, radiationpage.getPanel());
 
+        MainFrame.setMenuBar(menuBar);
         MainFrame.add(tabbedPane);
         MainFrame.setVisible(true);
     }
-   
-    public static MainScreen getInstance(){
-        if(instance == null){
+
+    public static MainScreen getInstance() {
+        if (instance == null) {
             instance = new MainScreen();
         }
         return instance;
     }
-    
-    public void refreshSensors(int typeofsensor){
-        if(typeofsensor == 0){
+
+    public void refreshSensors(int typeofsensor) {
+        if (typeofsensor == 0) {
             tempsensorpage.refreshSensorLabels();
-        }else if(typeofsensor == 1){
+        } else if (typeofsensor == 1) {
             flowpage.refreshSensorLabels();
-        }else if(typeofsensor == 2){
+        } else if (typeofsensor == 2) {
             pressurepage.refreshSensorLabels();
-        }else if(typeofsensor == 3){
+        } else if (typeofsensor == 3) {
             fullnesspage.refreshSensorLabels();
-        }else if(typeofsensor == 4){
+        } else if (typeofsensor == 4) {
             radiationpage.refreshSensorLabels();
         }
     }
-    public void updateAllSensors(int typeofsensor, int key, int value){
-        if(typeofsensor == 0){
+
+    public void updateAllSensors(int typeofsensor, int key, int value) {
+        if (typeofsensor == 0) {
             tempsensorpage.updateSensorValues(key, value);
-        }else if(typeofsensor == 1){
+        } else if (typeofsensor == 1) {
             flowpage.updateSensorValues(key, value);
-        }else if(typeofsensor == 2){
+        } else if (typeofsensor == 2) {
             pressurepage.updateSensorValues(key, value);
-        }else if(typeofsensor == 3){
+        } else if (typeofsensor == 3) {
             fullnesspage.updateSensorValues(key, value);
-        }else if(typeofsensor == 4){
+        } else if (typeofsensor == 4) {
             radiationpage.updateSensorValues(key, value);
         }
     }
-    
+
     public void ConnectToServer() {
         connection = Connection.getInstance();
-        //connection.Connect(127.0.0.1, 1);
         //Let's keep the last line commented until we are sure the connection works
     }
-    
-    public boolean isConnected(){
+
+    public boolean isConnected() {
         return connection.isConnected();
     }
 
     public int getFrameHeight() {
         return MainFrame.getHeight();
     }
-    public void addValuesToGraph(int typeofsensor, int key, int[] values){
-        if(typeofsensor == 1){
+
+    public void addValuesToGraph(int typeofsensor, int key, int[] values) {
+        if (typeofsensor == 1) {
             tempsensorpage.addValuesToGraph(key, values);
-        }else if(typeofsensor == 2){
+        } else if (typeofsensor == 2) {
             flowpage.addValuesToGraph(key, values);
-        }else if(typeofsensor == 3){
+        } else if (typeofsensor == 3) {
             pressurepage.addValuesToGraph(key, values);
-        }else if(typeofsensor == 4){
+        } else if (typeofsensor == 4) {
             fullnesspage.addValuesToGraph(key, values);
-        }else if(typeofsensor == 5){
+        } else if (typeofsensor == 5) {
             radiationpage.addValuesToGraph(key, values);
         }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource().equals(menuItem)) {
+            flowadjustframe = new JFrame("Instellen flow");
+            flowadjustframe.setLayout(new BorderLayout());
+            flowadjustframe.setLocationRelativeTo(null);
+            flowadjustframe.setSize(200, 75);
+            min = new JTextField("Flow");
+            flowadjustframe.setAlwaysOnTop(true);
+            flowadjustframe.setResizable(false);
+            JButton apply = new JButton("Toepassen");
+            apply.addActionListener(this);
+
+            flowadjustframe.add(min, BorderLayout.PAGE_START);
+            flowadjustframe.add(apply, BorderLayout.PAGE_END);
+            flowadjustframe.setVisible(true);
+        } else {
+            flowadjustframe.dispose();
+            String minText = min.getText();
+
+            if (isInteger(minText)) {
+                try {
+                    Connection.getInstance().sendRequest(7, null, minText, null);
+                } catch (IOException ex) {
+                    Logger.getLogger(SensorPage.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                //Fuck this shit
+            }
+        }
+    }
+
+    private static boolean isInteger(String s) {
+        try {
+            Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
 }
