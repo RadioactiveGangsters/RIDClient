@@ -9,3 +9,4 @@ IRIGui.jar
 *.war
 *.ear
 /IRIGui/dist/
+IRIGui/src/Operations/tabbedPaneThreader.java
