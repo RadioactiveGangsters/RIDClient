@@ -94,13 +94,12 @@ public class Connection implements Runnable {
             } catch (IOException ex) {
                 ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we de opcode van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
             }
-            System.out.println("Opcode: " + opcode);
             switch (opcode) {
                 case 0:
-                    System.out.println("Not defined yet, see Berend for details, Opcode = 0");
+                    //System.out.println("Not defined yet, see Berend for details, Opcode = 0");
                     break;
                 case 1:
-                    System.out.println("Not defined yet, see Berend for details, Opcode = 1");
+                    //System.out.println("Not defined yet, see Berend for details, Opcode = 1");
                     break;
                 case 2:
                     try {
@@ -114,18 +113,14 @@ public class Connection implements Runnable {
                     int amntofsensors = 0;
                     int sensortype = 0;
                     try {
-                        do {
                             sensortype = input.readInt();
-                        } while (sensortype == 0);
 
                     } catch (IOException ex) {
                         ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we de sensortype van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
                     }
                     System.out.println("Sensortype: " + sensortype);
                     try {
-                        do {
                             amntofsensors = input.readInt();
-                        } while (amntofsensors == 0);
                     } catch (IOException ex) {
                         ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we het aantal sensoren van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
                     }
@@ -140,9 +135,7 @@ public class Connection implements Runnable {
                     int temp = 0;
                     while (index <= (amntofsensors + 2)) {
                         try {
-                            do {
                                 temp = input.readInt();
-                            } while (temp == 0);
                             inputarray.add(temp);
                         } catch (IOException ex) {
                             ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we een waarde van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
@@ -157,9 +150,7 @@ public class Connection implements Runnable {
                     int amntofvalues = 0;
                     sensortype = 0;
                     try {
-                        do {
                             sensortype = input.readInt();
-                        } while (sensortype == 0);
 
                     } catch (IOException ex) {
                         ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we de sensortype van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
@@ -179,9 +170,7 @@ public class Connection implements Runnable {
 
                     while (index <= (amntofvalues + 2)) {
                         try {
-                            do {
                                 temp = input.readInt();
-                            } while (temp == 0);
                             inputarray.add(temp);
                         } catch (IOException ex) {
                             ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we een waarde van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
@@ -196,33 +185,25 @@ public class Connection implements Runnable {
                     int value = 1;
                     sensortype = 0;
                     try {
-                        do {
                             sensortype = input.readInt();
-                        } while (sensortype == 0);
 
                     } catch (IOException ex) {
                         ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we de sensortype van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
                     }
                     try {
-                        do {
                             value = input.readInt();
-                        } while (value == 0);
                     } catch (IOException ex) {
                         Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     int counteractiontype = -1;
                     try {
-                        do {
                             counteractiontype = input.readInt();
-                        } while (counteractiontype == 0);
                     } catch (IOException ex) {
                         Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     int sensornr = 0;
                     try {
-                        do {
                             sensornr = input.readInt();
-                        } while (sensornr == 0);
                     } catch (IOException ex) {
                         Logger.getLogger(Connection.class.getName()).log(Level.SEVERE, null, ex);
                     }

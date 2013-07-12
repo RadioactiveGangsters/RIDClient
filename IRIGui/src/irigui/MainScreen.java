@@ -143,15 +143,15 @@ public class MainScreen implements ActionListener {
     }
 
     public void updateAllSensors(int typeofsensor, int key, int value) {
-        if (typeofsensor == 0) {
+        if (typeofsensor == 1) {
             tempsensorpage.updateSensorValues(key, value);
-        } else if (typeofsensor == 1) {
-            flowpage.updateSensorValues(key, value);
         } else if (typeofsensor == 2) {
-            pressurepage.updateSensorValues(key, value);
+            flowpage.updateSensorValues(key, value);
         } else if (typeofsensor == 3) {
-            fullnesspage.updateSensorValues(key, value);
+            pressurepage.updateSensorValues(key, value);
         } else if (typeofsensor == 4) {
+            fullnesspage.updateSensorValues(key, value);
+        } else if (typeofsensor == 5) {
             radiationpage.updateSensorValues(key, value);
         }
     }
