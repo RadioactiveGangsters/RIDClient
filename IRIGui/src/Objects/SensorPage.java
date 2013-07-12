@@ -131,7 +131,7 @@ public class SensorPage implements MouseListener, ActionListener {
             valuepanel.add((JLabel) sensors.get(x));
             x++;
         }
-        mainpanel.setVisible(true);
+        //mainpanel.setVisible(true);
     }
 
     private void makeGraph(final XYDataset dataset) {
@@ -176,7 +176,6 @@ public class SensorPage implements MouseListener, ActionListener {
     @Override
     public void mousePressed(MouseEvent e) {
         //Just handling a border, for the user to recognize that the JLabel is in fact clicked
-        System.out.println("Clicked!");
         if (selectedlabel != null) {
             selectedlabel.setBorder(null);
         }
@@ -185,7 +184,6 @@ public class SensorPage implements MouseListener, ActionListener {
         selectedlabel.setBorder(lineBorder);
         if (SwingUtilities.isRightMouseButton(e)) {
         } else {
-            System.out.println("LeftMouse");
             //The Real WORK!!
             String full = selectedlabel.getText();
             selectedlabelsubstr = full.substring(0, full.lastIndexOf(":"));
@@ -215,7 +213,6 @@ public class SensorPage implements MouseListener, ActionListener {
 
     public void addValuesToGraph(int key, int[] values) {
         int index = 0;
-        System.out.println("Valuessss: " + values.length);
         while (index != (values.length)) {
             series1.add(index, values[index]);
             System.out.println(values[index]);
@@ -245,7 +242,6 @@ public class SensorPage implements MouseListener, ActionListener {
             minmaxframe.add(apply, BorderLayout.PAGE_END);
             minmaxframe.setVisible(true);
         } else {
-            System.out.println("Settings toepassen");
             minmaxframe.dispose();
             String minText = min.getText();
             String maxText = max.getText();

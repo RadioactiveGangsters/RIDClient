@@ -23,8 +23,8 @@ public class Connection implements Runnable {
     DataOutputStream output;
     DataInputStream input;
     private static Connection instance = null;
-    String ip;
-    int port;
+    public String ip;
+    public int port;
 
     /**
      * Initialize the connection and streams This class is now Singleton, since
@@ -78,7 +78,6 @@ public class Connection implements Runnable {
             output.write(request);
             output.writeInt(Integer.parseInt(min));
         } else {
-            System.out.println("Request: " + request);
             output.write(request);
             output.writeInt("Temperature1".length());
             output.writeBytes("Temperature1");
@@ -111,7 +110,6 @@ public class Connection implements Runnable {
                     }
                     break;
                 case 3:
-                    System.out.println("Case 3: Connection thread");
                     inputarray = new ArrayList();
                     int amntofsensors = 0;
                     int sensortype = 0;
@@ -123,6 +121,7 @@ public class Connection implements Runnable {
                     } catch (IOException ex) {
                         ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we de sensortype van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
                     }
+                    System.out.println("Sensortype: " + sensortype);
                     try {
                         do {
                             amntofsensors = input.readInt();
@@ -130,6 +129,7 @@ public class Connection implements Runnable {
                     } catch (IOException ex) {
                         ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we het aantal sensoren van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
                     }
+                    System.out.println("AmountofSensors: " + amntofsensors);
                     int index = 0;
                     inputarray.add(opcode);
                     index++;
@@ -137,7 +137,7 @@ public class Connection implements Runnable {
                     index++;
                     inputarray.add(amntofsensors);
                     index++;
-                    int temp;
+                    int temp = 0;
                     while (index <= (amntofsensors + 2)) {
                         try {
                             do {
@@ -147,7 +147,7 @@ public class Connection implements Runnable {
                         } catch (IOException ex) {
                             ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we een waarde van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
                         }
-
+                        System.out.println("Data received: " + temp);
                         index++;
                     }
                     break;

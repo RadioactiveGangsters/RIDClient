@@ -60,8 +60,6 @@ public class DataHandler {
                 index++;
             }
             MainScreen.getInstance().addValuesToGraph(sensortype, temparray.length, temparray);
-            System.out.println("Opcode = 4");
-            System.out.println("Get all the data neede to build the graph for the selected sensor");
         } else if (dataarray[index] == 5) {
             index++;
             int sensortype = (int) dataarray[index];
@@ -193,8 +191,6 @@ public class DataHandler {
                 }
             }
             exists = false;
-            System.out.println("Opcode = 5");
-            System.out.println("ALARMMMMMM!!!!");
         }
 
     }

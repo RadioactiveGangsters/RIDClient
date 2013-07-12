@@ -18,51 +18,52 @@ import javax.swing.WindowConstants;
  *
  * @author user
  */
-public class ErrorFrame implements ActionListener{
+public class ErrorFrame implements ActionListener {
 
     JDialog ErrorFrame;
     JPanel ErrorPanel;
     JButton CounterButton;
     String type;
     Font titlefont = new Font("SansSerif", Font.BOLD, 12);
-    static boolean erroroccured;
-    
+    static boolean erroroccured = false;
 
     public ErrorFrame(String text, String countermeasurement, String type) {
-        this.type = type;
-        ErrorFrame = new JDialog();
-        ErrorPanel = new JPanel();
-        JLabel WarningText = new JLabel();
-        CounterButton = new JButton(countermeasurement);
-        CounterButton.addActionListener(this);
-        erroroccured = true;
-        WarningText.setFont(titlefont);
-        WarningText.setHorizontalTextPosition(JLabel.CENTER);
-        WarningText.setVerticalTextPosition(JLabel.CENTER);
-        WarningText.setText(text);
-        ErrorPanel.add(WarningText);
-        ErrorPanel.add(CounterButton);
-        ErrorFrame.add(ErrorPanel);
-        ErrorFrame.setSize(300, 75);
-        ErrorFrame.setLocationRelativeTo(null);
-        ErrorFrame.setResizable(false);
-        ErrorFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        ErrorFrame.setAlwaysOnTop(true);
-        ErrorFrame.setVisible(true);
-        ErrorFrame.pack();
+        if (!erroroccured) {
+            erroroccured = true;
+            this.type = type;
+            ErrorFrame = new JDialog();
+            ErrorPanel = new JPanel();
+            JLabel WarningText = new JLabel();
+            CounterButton = new JButton(countermeasurement);
+            CounterButton.addActionListener(this);
+            erroroccured = true;
+            WarningText.setFont(titlefont);
+            WarningText.setHorizontalTextPosition(JLabel.CENTER);
+            WarningText.setVerticalTextPosition(JLabel.CENTER);
+            WarningText.setText(text);
+            ErrorPanel.add(WarningText);
+            ErrorPanel.add(CounterButton);
+            ErrorFrame.add(ErrorPanel);
+            ErrorFrame.setSize(300, 75);
+            ErrorFrame.setLocationRelativeTo(null);
+            ErrorFrame.setResizable(false);
+            ErrorFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+            ErrorFrame.setAlwaysOnTop(true);
+            ErrorFrame.setVisible(true);
+            ErrorFrame.pack();
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (type.equals("Connection")) {
             Connection connection = Connection.getInstance();
-            System.out.println("Re-esteblashing connection");
-            //connection.Connect(null, port);
+            connection.Connect(Connection.getInstance().ip, Connection.getInstance().port);
             //Still Commented
-        }else if(type.equals("NoDataType")){
-            System.out.println("No Data found!");
+            erroroccured = false;
+        } else if (type.equals("NoDataType")) {
         }
         ErrorFrame.dispose();
-        
+
     }
 }

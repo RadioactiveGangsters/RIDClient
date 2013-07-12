@@ -44,7 +44,8 @@ public class MainScreen implements ActionListener {
     JFrame flowadjustframe;
     JTextField min;
     JTextField max;
-
+    JTabbedPane tabbedPane;
+    
     private MainScreen() {
         try {
             // Set set system look and feel
@@ -100,7 +101,7 @@ public class MainScreen implements ActionListener {
         menuItem.addActionListener(this);
         menu.add(menuItem);
 
-        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane = new JTabbedPane();
 
         tempsensorpage = new SensorPage("Temperature", 150, this, "Temperature");
         flowpage = new SensorPage("Flow", 70, this, "Flow");
@@ -117,6 +118,7 @@ public class MainScreen implements ActionListener {
         MainFrame.setMenuBar(menuBar);
         MainFrame.add(tabbedPane);
         MainFrame.setVisible(true);
+        System.out.println("This: " + tabbedPane.getSelectedIndex());
     }
 
     public static MainScreen getInstance() {
@@ -220,5 +222,9 @@ public class MainScreen implements ActionListener {
             return false;
         }
         return true;
+    }
+    
+    public int getSelectedTab(){
+        return tabbedPane.getSelectedIndex();
     }
 }
