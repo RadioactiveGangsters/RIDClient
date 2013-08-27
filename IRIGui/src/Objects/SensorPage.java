@@ -165,7 +165,7 @@ public class SensorPage implements MouseListener, ActionListener {
         ChartPanel chartpanel = new ChartPanel(chart);
         graphpanel.removeAll();
         graphpanel.add(chartpanel);
-        mainpanel.setVisible(true);
+        graphpanel.setVisible(true);
 
     }
 
@@ -186,11 +186,12 @@ public class SensorPage implements MouseListener, ActionListener {
         } else {
             //The Real WORK!!
             String full = selectedlabel.getText();
-            selectedlabelsubstr = full.substring(0, full.lastIndexOf(":"));
+            selectedlabelsubstr = full.substring(0, full.lastIndexOf(" sensor"));
             String sensor = full.substring(full.lastIndexOf("r") + 2, full.lastIndexOf(": "));
             int sensornr = Integer.parseInt(sensor);
             series1 = new XYSeries(selectedlabelsubstr);
-            RequestHandler.getInstance().requestGraphData(full);
+            selectedlabelsubstr = selectedlabelsubstr + sensornr;
+            RequestHandler.getInstance().requestGraphData(selectedlabelsubstr, 0);
             //Some command to req data from the server
         }
     }
@@ -253,7 +254,7 @@ public class SensorPage implements MouseListener, ActionListener {
                 String part2 = full.substring(full.lastIndexOf("r ") + 2, full.lastIndexOf(":"));
                 full = part1 + part2;
                 try {
-                    Connection.getInstance().sendRequest(6, full, minText, maxText);
+                    Connection.getInstance().sendRequest(6, full, minText, maxText, 0);
                 } catch (IOException ex) {
                     Logger.getLogger(SensorPage.class.getName()).log(Level.SEVERE, null, ex);
                 }

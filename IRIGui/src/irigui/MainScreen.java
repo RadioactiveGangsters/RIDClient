@@ -205,7 +205,7 @@ public class MainScreen implements ActionListener {
 
             if (isInteger(minText)) {
                 try {
-                    Connection.getInstance().sendRequest(7, null, minText, null);
+                    Connection.getInstance().sendRequest(7, null, minText, null, 0);
                 } catch (IOException ex) {
                     Logger.getLogger(SensorPage.class.getName()).log(Level.SEVERE, null, ex);
                 }

@@ -66,7 +66,7 @@ public class Connection implements Runnable {
         }
     }
 
-    public void sendRequest(final int request, String typeofsensor, String min, String max) throws IOException {
+    public void sendRequest(final int request, String typeofsensor, String min, String max, int sensorNr) throws IOException {
         if (request == 3) {
             output.write(request);
         } else if (request == 6) {
@@ -79,8 +79,8 @@ public class Connection implements Runnable {
             output.writeInt(Integer.parseInt(min));
         } else {
             output.write(request);
-            output.writeInt("Temperature1".length());
-            output.writeBytes("Temperature1");
+            output.writeInt(typeofsensor.length());
+            output.writeBytes(typeofsensor);
         }
     }
 
