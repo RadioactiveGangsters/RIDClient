@@ -10,3 +10,5 @@ IRIGui.jar
 *.ear
 /IRIGui/dist/
 IRIGui/src/Operations/tabbedPaneThreader.java
+/IRIGui_1/nbproject/private/
+/IRIGui_1/build/
