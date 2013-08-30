@@ -58,12 +58,9 @@ public class ErrorFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (type.equals("Connection")) {
             Connection connection = Connection.getInstance();
-            if(connection.Connect(Connection.getInstance().ip, Connection.getInstance().port)){
-                erroroccured = false;
-            }else{
-                erroroccured = true;
-            }
+            connection.Connect(Connection.getInstance().ip, Connection.getInstance().port);
             //Still Commented
+            erroroccured = false;
         } else if (type.equals("NoDataType")) {
         }
         ErrorFrame.dispose();

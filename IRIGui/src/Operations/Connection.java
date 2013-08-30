@@ -41,7 +41,7 @@ public class Connection implements Runnable {
         return instance;
     }
 
-    public boolean Connect(final String ip, final int port) {
+    public void Connect(final String ip, final int port) {
         this.ip = ip;
         this.port = port;
         try {
@@ -52,12 +52,9 @@ public class Connection implements Runnable {
 
         } catch (UnknownHostException ex) {
             System.out.println(ex.getMessage());
-            return false;
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
-            return false;
         }
-        return true;
 
     }
 
@@ -75,7 +72,6 @@ public class Connection implements Runnable {
         } else if (request == 6) {
             output.write(request);
             output.writeInt(typeofsensor.length());
-            output.writeBytes(typeofsensor);
             output.writeInt(Integer.parseInt(min));
             output.writeInt(Integer.parseInt(max));
         }else if(request == 7){
@@ -128,7 +124,7 @@ public class Connection implements Runnable {
                     } catch (IOException ex) {
                         ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we het aantal sensoren van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
                     }
-                    System.out.println("AmountofSensors: " + amntofsensors);
+                    System.out.println("AmountofSensors: " + amntofsensors + " ( " +Integer.toHexString(amntofsensors) +')');
                     int index = 0;
                     inputarray.add(opcode);
                     index++;
@@ -136,16 +132,16 @@ public class Connection implements Runnable {
                     index++;
                     inputarray.add(amntofsensors);
                     index++;
-                    int temp = 0;
+                    int temp = 0, snnr;
                     while (index <= (amntofsensors + 2)) {
                         try {
                                 temp = input.readInt();
-                                //temp = input.read();
                             inputarray.add(temp);
                         } catch (IOException ex) {
                             ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we een waarde van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
                         }
-                        System.out.println("Data received: " + temp);
+                        snnr = index - 2;
+                        System.out.println("Data received (" + snnr + "): " + temp);
                         index++;
                     }
                     break;
