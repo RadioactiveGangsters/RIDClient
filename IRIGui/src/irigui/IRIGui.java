@@ -22,7 +22,7 @@ public class IRIGui {
     public static String NodataType = "NoData";
     public static void main(String[] args) {
         MainScreen.getInstance();
-        Connection.getInstance().Connect("145.92.27.163", 61014);
+        Connection.getInstance().Connect("192.168.2.10", 61014);
         Thread con = new Thread(Connection.getInstance());
         con.start();
         Thread requester = new Thread(RequestHandler.getInstance());
