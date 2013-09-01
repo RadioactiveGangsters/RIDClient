@@ -49,7 +49,7 @@ public class WarningFrame implements Runnable, ActionListener {
         OkButton = new JButton(countermeasurement);
         OkButton.addActionListener(this);
 
-        text =  text + " " + sensorid + " leest een waarde van: " + value;
+        text =  text + " " + sensorid + "geeft een warning";
         WarningText.setBorder(new EmptyBorder(0,125,0,0));
         WarningText.setFont(titlefont);
         WarningText.setText(text);

@@ -175,6 +175,7 @@ public class Connection implements Runnable {
                     while (index <= (amntofvalues + 2)) {
                         try {
                             temp = input.readInt();
+                            System.out.println("Graph data: " + temp);
                             inputarray.add(temp);
                         } catch (IOException ex) {
                             ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we een waarde van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
