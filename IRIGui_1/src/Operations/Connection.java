@@ -41,7 +41,7 @@ public class Connection implements Runnable {
         return instance;
     }
 
-    public void Connect(final String ip, final int port) {
+    public boolean Connect(final String ip, final int port) {
         this.ip = ip;
         this.port = port;
         try {
@@ -52,9 +52,12 @@ public class Connection implements Runnable {
 
         } catch (UnknownHostException ex) {
             System.out.println(ex.getMessage());
+            return false;
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
+            return false;
         }
+        return true;
 
     }
 
@@ -69,13 +72,10 @@ public class Connection implements Runnable {
     public void sendRequest(final int request, String typeofsensor, String min, String max, int sensorNr) throws IOException {
         if (request == 3) {
             output.write(request);
-        }else if(request == 5){
-            output.write(request);
-            output.writeInt(typeofsensor.length());
-            output.writeBytes(typeofsensor);
         } else if (request == 6) {
             output.write(request);
             output.writeInt(typeofsensor.length());
+            output.writeBytes(typeofsensor);
             output.writeInt(Integer.parseInt(min));
             output.writeInt(Integer.parseInt(max));
         }else if(request == 7){
@@ -140,6 +140,7 @@ public class Connection implements Runnable {
                     while (index <= (amntofsensors + 2)) {
                         try {
                                 temp = input.readInt();
+                                //temp = input.read();
                             inputarray.add(temp);
                         } catch (IOException ex) {
                             ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we een waarde van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
@@ -171,17 +172,17 @@ public class Connection implements Runnable {
                     index++;
                     inputarray.add(amntofvalues);
                     index++;
-                    System.out.println("Amnt of values" + amntofvalues);
+
                     while (index <= (amntofvalues + 2)) {
                         try {
-                            temp = input.readInt();
+                                temp = input.readInt();
                             inputarray.add(temp);
                         } catch (IOException ex) {
                             ErrorFrame erfframe = new ErrorFrame("De verbinding is verbroken voordat we een waarde van het packet konden lezen", "Herverbinden", IRIGui.ConnectionType);
                         }
+
                         index++;
                     }
-                    System.out.println("Done");
                     break;
                 case 5:
                     inputarray = new ArrayList();

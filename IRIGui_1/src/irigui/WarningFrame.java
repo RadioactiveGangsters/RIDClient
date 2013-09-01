@@ -4,9 +4,7 @@
  */
 package irigui;
 
-import Operations.Connection;
 import Operations.DataHandler;
-import Operations.RequestHandler;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -14,8 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -37,12 +33,10 @@ public class WarningFrame implements Runnable, ActionListener {
     Font titlefont = new Font("SansSerif", Font.BOLD, 15);
     String text;
     int value;
-    String sensor;
 
-    public WarningFrame(String text, int value, int sensorid, String countermeasurement, String sensor) {
+    public WarningFrame(String text, int value, int sensorid, String countermeasurement) {
         this.text = text;
         this.value = value;
-        this.sensor = sensor + sensorid;
         WarningFrame = new JDialog();
         WarningPanel = new JPanel(new BorderLayout());
         JLabel WarningText = new JLabel();
@@ -56,7 +50,7 @@ public class WarningFrame implements Runnable, ActionListener {
         WarningPanel.add(WarningText, BorderLayout.CENTER);
         WarningPanel.add(OkButton, BorderLayout.PAGE_END);
         WarningFrame.add(WarningPanel);
-        WarningFrame.setSize(700, 500);
+        WarningFrame.setSize(500, 300);
         WarningFrame.setLocationRelativeTo(null);
         Thread flasher = new Thread(this);
         flasher.start();
@@ -89,13 +83,8 @@ public class WarningFrame implements Runnable, ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(OkButton)) {
             WarningFrame.dispose();
+            DataHandler.getInstance().removeFromErrors(this);
             StopSound();
-            try {
-                Connection.getInstance().sendRequest(5, this.sensor, null, null, 0);
-            } catch (IOException ex) {
-                Logger.getLogger(WarningFrame.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            DataHandler.getInstance().setError();
         }
     }
     public String getText(){
