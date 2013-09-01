@@ -97,7 +97,7 @@ public class SensorPage implements MouseListener, ActionListener {
         int x = 0;
         JLabel sensorlabel;
         while (x != amntofsensors) {
-            sensorlabel = new JLabel(titletext + " sensor " + (x + 1) + ": ");
+            sensorlabel = new JLabel(titletext + " sensor " + x + ": ");
             sensorlabel.setComponentPopupMenu(rmbmenu);
             sensorlabel.addMouseListener(this);
             valuepanel.add(sensorlabel);
@@ -137,7 +137,7 @@ public class SensorPage implements MouseListener, ActionListener {
     private void makeGraph(final XYDataset dataset) {
         final JFreeChart chart = ChartFactory.createXYLineChart(
                 selectedlabelsubstr, // chart title
-                "Tijd", // x axis label
+                "Aantal seconden geleden", // x axis label
                 "Waarde", // y axis label
                 dataset, // data
                 PlotOrientation.VERTICAL,
