@@ -76,7 +76,7 @@ public class Connection implements Runnable {
         } else if (request == 6) {
             output.write(request);
             output.writeInt(typeofsensor.length());
-            output.writeInt(typeofsensor);
+            output.writeBytes(typeofsensor);
             output.writeInt(Integer.parseInt(min));
             output.writeInt(Integer.parseInt(max));
         }else if(request == 7){
