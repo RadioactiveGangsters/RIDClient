@@ -76,6 +76,7 @@ public class Connection implements Runnable {
         } else if (request == 6) {
             output.write(request);
             output.writeInt(typeofsensor.length());
+            output.writeInt(typeofsensor);
             output.writeInt(Integer.parseInt(min));
             output.writeInt(Integer.parseInt(max));
         }else if(request == 7){
@@ -100,7 +101,7 @@ public class Connection implements Runnable {
             }
             switch (opcode) {
                 case 0:
-                    //System.out.println("Not defined yet, see Berend for details, Opcode = 0");
+                    // defined undefined, TODO: provide sane fallback
                     break;
                 case 1:
                     //System.out.println("Not defined yet, see Berend for details, Opcode = 1");
